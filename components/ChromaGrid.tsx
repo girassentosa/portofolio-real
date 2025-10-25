@@ -33,8 +33,8 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const fadeRef = useRef<HTMLDivElement>(null);
-  const setX = useRef<((value: number) => void) | null>(null);
-  const setY = useRef<((value: number) => void) | null>(null);
+  const setX = useRef<Function | null>(null);
+  const setY = useRef<Function | null>(null);
   const pos = useRef({ x: 0, y: 0 });
 
   const demo: ChromaGridItem[] = [
@@ -114,8 +114,8 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
       duration: damping,
       ease,
       onUpdate: () => {
-        setX.current?.(pos.current.x);
-        setY.current?.(pos.current.y);
+        if (setX.current) setX.current(pos.current.x);
+        if (setY.current) setY.current(pos.current.y);
       },
       overwrite: true
     });

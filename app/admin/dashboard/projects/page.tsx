@@ -437,7 +437,7 @@ export default function AdminProjects() {
                   <label className="block text-sm text-gray-300 mb-2">Category/Handle</label>
                   <input
                     type="text"
-                    value={newProject.project_handle}
+                    value={newProject.project_handle || ''}
                     onChange={(e) => setNewProject({ ...newProject, project_handle: e.target.value })}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
                     placeholder="Web Development"
@@ -448,7 +448,7 @@ export default function AdminProjects() {
                   <label className="block text-sm text-gray-300 mb-2">Display Order</label>
                   <input
                     type="number"
-                    value={newProject.display_order}
+                    value={newProject.display_order || 0}
                     onChange={(e) =>
                       setNewProject({ ...newProject, display_order: parseInt(e.target.value) })
                     }
@@ -490,7 +490,7 @@ export default function AdminProjects() {
                   <label className="block text-sm text-gray-300 mb-2">Project URL (Optional)</label>
                   <input
                     type="text"
-                    value={newProject.project_url}
+                    value={newProject.project_url || ''}
                     onChange={(e) => setNewProject({ ...newProject, project_url: e.target.value })}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
                     placeholder="https://github.com/..."
