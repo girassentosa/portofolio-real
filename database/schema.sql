@@ -45,12 +45,14 @@ CREATE TABLE admin_users (
   id SERIAL PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
   password_hash VARCHAR(32) NOT NULL,
+  photo_url TEXT DEFAULT '/images/profile.jpg',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 COMMENT ON TABLE admin_users IS 'Admin authentication dengan MD5 password hashing';
 COMMENT ON COLUMN admin_users.password_hash IS 'MD5 hash dari password';
+COMMENT ON COLUMN admin_users.photo_url IS 'URL foto profile admin';
 
 
 -- =====================================================
@@ -351,8 +353,8 @@ CREATE POLICY "Enable all operations for authenticated users"
 -- DEFAULT DATA: Admin User
 -- =====================================================
 
-INSERT INTO admin_users (username, password_hash) VALUES 
-  ('admin', '0192023a7bbd73250516f069df18b500');
+INSERT INTO admin_users (username, password_hash, photo_url) VALUES 
+  ('admin', '0192023a7bbd73250516f069df18b500', '/images/profile.jpg');
 -- Default password: admin123 (MD5 hash)
 -- ⚠️ IMPORTANT: Ganti password ini setelah first login!
 

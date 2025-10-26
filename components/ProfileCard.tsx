@@ -285,7 +285,10 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               className="avatar"
               src={avatarUrl}
               alt={`${name || 'User'} avatar`}
-              loading="lazy"
+              loading="eager"
+              fetchPriority="high"
+              width="400"
+              height="500"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';

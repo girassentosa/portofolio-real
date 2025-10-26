@@ -4,6 +4,7 @@ export interface AdminUser {
   id: number;
   username: string;
   password_hash: string;
+  photo_url: string;
   created_at: string;
   updated_at: string;
 }

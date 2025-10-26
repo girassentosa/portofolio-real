@@ -171,6 +171,7 @@ npm run dev
 - id (PRIMARY KEY)
 - username (UNIQUE)
 - password_hash (MD5)
+- photo_url (TEXT, default: '/images/profile.jpg')
 - created_at, updated_at
 ```
 

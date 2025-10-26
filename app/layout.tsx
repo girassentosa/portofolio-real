@@ -9,11 +9,15 @@ import Navbar from "@/components/Navbar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
 });
 
 export default function RootLayout({
@@ -27,12 +31,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Portfolio</title>
-        <meta name="description" content="My Portfolio Website" />
+        <title>Taji Jadda Giras Sentosa - Web & IoT Developer Portfolio</title>
+        <meta name="description" content="Portfolio website Taji Jadda Giras Sentosa - Software Engineer dengan 2+ tahun pengalaman dalam Web Development dan IoT. Spesialisasi JavaScript, React, Next.js, Node.js, dan Arduino." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#000000" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        data-page-loading={!isAdminRoute ? "true" : "false"}
       >
         {/* Background Light Rays - Only show on main portfolio page */}
         {!isAdminRoute && (

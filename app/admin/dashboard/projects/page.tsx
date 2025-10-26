@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Project } from '@/types/database';
 import Image from 'next/image';
+import Toast from '@/components/Toast';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -153,11 +154,12 @@ export default function AdminProjects() {
 
   return (
     <div className="space-y-6">
-      {/* Success Message */}
+      {/* Toast Notification */}
       {successMessage && (
-        <div className="bg-green-500/20 border border-green-500/50 text-green-200 px-6 py-4 rounded-lg">
-          ✅ {successMessage}
-        </div>
+        <Toast 
+          message={successMessage} 
+          onClose={() => setSuccessMessage('')}
+        />
       )}
 
       {/* Header */}

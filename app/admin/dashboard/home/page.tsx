@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { HomeContent, HomeStat, ProfileCard } from '@/types/database';
+import Toast from '@/components/Toast';
 
 export default function AdminHome() {
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
@@ -119,7 +120,6 @@ export default function AdminHome() {
 
   const showSuccess = (message: string) => {
     setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   if (isLoading) {
@@ -132,11 +132,12 @@ export default function AdminHome() {
 
   return (
     <div className="space-y-6">
-      {/* Success Message */}
+      {/* Toast Notification */}
       {successMessage && (
-        <div className="bg-green-500/20 border border-green-500/50 text-green-200 px-6 py-4 rounded-lg">
-          ✅ {successMessage}
-        </div>
+        <Toast 
+          message={successMessage} 
+          onClose={() => setSuccessMessage('')}
+        />
       )}
 
       {/* Home Content Section */}

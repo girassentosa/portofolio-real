@@ -41,12 +41,17 @@ export default function Home() {
     async function loadData() {
       try {
         setIsLoading(true);
+        
         const data = await fetchAllPortfolioData();
         setPortfolioData(data);
       } catch (error) {
         console.error('Error loading portfolio data:', error);
       } finally {
         setIsLoading(false);
+        // Show navbar dan konten bersamaan dengan smooth transition
+        setTimeout(() => {
+          document.body.setAttribute('data-page-loading', 'false');
+        }, 150);
       }
     }
     loadData();
@@ -116,7 +121,27 @@ ${message}`;
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Responsive offset untuk semua devices
+      const width = window.innerWidth;
+      let headerOffset;
+      
+      if (width < 640) {
+        headerOffset = 55; // Mobile (< 640px)
+      } else if (width < 768) {
+        headerOffset = 60; // Small tablet (640px - 768px)
+      } else if (width < 1024) {
+        headerOffset = 85; // Medium tablet (768px - 1024px)
+      } else {
+        headerOffset = 100; // Desktop (≥ 1024px)
+      }
+      
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -142,13 +167,40 @@ ${message}`;
     setSelectedFormat(null);
   };
 
-  // Loading state
+  // Loading state - Custom Loading Screen
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-cyan-400 mb-4"></div>
-          <p className="text-white/60 text-lg">Loading portfolio...</p>
+          {/* Logo Container with Glow */}
+          <div className="relative mb-8">
+            {/* Outer Glow Ring */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 opacity-20 blur-3xl animate-pulse"></div>
+            </div>
+            
+            {/* Logo Circle */}
+            <div className="relative w-24 h-24 mx-auto">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 animate-spin" style={{ animationDuration: '3s' }}></div>
+              <div className="absolute inset-1 rounded-full bg-black flex items-center justify-center">
+                <span className="text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                  TJ
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Loading Text */}
+          <div className="space-y-3">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
+              Loading Portofolio
+            </h2>
+            <div className="flex justify-center gap-1.5">
+              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -173,7 +225,7 @@ ${message}`;
   }
 
   return (
-    <div>
+    <div className={`${isLoading ? 'opacity-0' : 'opacity-100 animate-fade-in'} transition-opacity duration-500`}>
       {/* Home Section */}
       <div id="home" className="w-full min-h-screen pt-32 sm:pt-36 md:pt-40 lg:pt-48 px-4 sm:px-6 md:px-8 lg:px-12 pb-12">
       <div className="container mx-auto max-w-7xl">
@@ -182,10 +234,10 @@ ${message}`;
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           {/* Left Column - Text Content */}
-          <div className="text-white space-y-4 order-2 lg:order-1">
+          <div className="text-white order-2 lg:order-1">
           
           {/* Greeting with TrueFocus Effect - DYNAMIC! */}
-          <div className="text-base sm:text-lg md:text-xl text-white/70">
+          <div className="text-base sm:text-lg md:text-xl text-white/70 leading-tight">
             <TrueFocus 
               sentence={portfolioData.homeContent?.greeting || 'Halo, saya'}
               manualMode={false}
@@ -198,7 +250,7 @@ ${message}`;
           </div>
           
           {/* Name with Typing Effect - DYNAMIC! */}
-          <div className="w-full" style={{ minHeight: '2.5rem' }}>
+          <div className="w-full mt-3 sm:mt-3 md:mt-3 lg:mt-3">
             <TextType 
               as="h1"
               text={portfolioData.homeContent?.name || 'Your Name'}
@@ -207,13 +259,13 @@ ${message}`;
               showCursor={true}
               cursorCharacter="|"
               loop={true}
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-[1.2] break-words"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight break-words"
               cursorClassName="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
             />
           </div>
 
           {/* Description with Decrypted Text Effect - DYNAMIC! */}
-          <div className="w-full text-sm sm:text-base md:text-lg lg:text-xl text-white/80 leading-relaxed sm:leading-relaxed md:leading-loose text-justify">
+          <div className="w-full mt-3 sm:mt-3 md:mt-3 lg:mt-3 text-sm sm:text-base md:text-lg lg:text-xl text-white/80 leading-normal sm:leading-normal md:leading-relaxed text-justify">
             <DecryptedText
               text={portfolioData.homeContent?.description || 'Your description here'}
               speed={50}
@@ -227,7 +279,7 @@ ${message}`;
           </div>
 
           {/* Social Media */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 animate-fade-in-up">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 animate-fade-in-up mt-4 sm:mt-4 md:mt-4 lg:mt-4">
             <span className="text-xs sm:text-sm md:text-base text-white/70">Ikuti saya:</span>
             <div className="flex items-center gap-2 sm:gap-3">
               {/* GitHub */}
@@ -281,7 +333,7 @@ ${message}`;
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-4 md:mt-4 lg:mt-4">
             <button 
               onClick={() => scrollToSection('#project')}
               className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50"
@@ -303,21 +355,21 @@ ${message}`;
           </div>
 
           {/* Stats Cards - DYNAMIC! */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-2 md:gap-2.5 mt-4 sm:mt-4 md:mt-4 lg:mt-4">
             {portfolioData.homeStats.map((stat) => (
               <div 
                 key={stat.id}
-                className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+                className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 text-center hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
               >
                 <div 
-                  className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
+                  className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent leading-tight"
                   style={{ 
                     backgroundImage: `linear-gradient(to right, ${stat.gradient_from}, ${stat.gradient_to})`
                   }}
                 >
                   {stat.stat_value}
                 </div>
-                <div className="text-[10px] sm:text-xs text-white/60 mt-1">{stat.stat_label}</div>
+                <div className="text-[9px] sm:text-[10px] md:text-xs text-white/60 mt-0.5 sm:mt-1 leading-tight">{stat.stat_label}</div>
               </div>
             ))}
             </div>
@@ -326,6 +378,7 @@ ${message}`;
 
           {/* Right Column - Profile Card - DYNAMIC! */}
           <div className="flex justify-center lg:justify-end order-1 lg:order-2">
+            <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] xl:max-w-[420px]">
             {portfolioData.profileCard && (
             <ProfileCard
                 avatarUrl={portfolioData.profileCard.avatar_url}
@@ -341,6 +394,7 @@ ${message}`;
                 onContactClick={() => scrollToSection('#contact')}
               />
             )}
+            </div>
           </div>
 
         </div>
@@ -348,7 +402,7 @@ ${message}`;
       </div>
 
         {/* About Section */}
-        <div id="about" className="w-full min-h-screen pt-24 sm:pt-28 md:pt-32 lg:pt-40 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 sm:pb-10 md:pb-12">
+        <div id="about" className="w-full pt-11 sm:pt-12 md:pt-11 lg:pt-13 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 lg:pb-12">
           <div className="container mx-auto max-w-7xl">
 
             {/* Section Title */}
@@ -457,8 +511,11 @@ ${message}`;
                   <div className="relative overflow-hidden rounded-2xl border-2 border-white/10 shadow-2xl">
                     <img 
                       src={portfolioData.aboutContent?.profile_photo_url || '/images/profile.jpg'} 
-                      alt="Profile" 
+                      alt="Taji Jadda Giras Sentosa - Profile Photo" 
                       className="w-full h-auto object-cover"
+                      loading="lazy"
+                      width="600"
+                      height="600"
                     />
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -475,7 +532,7 @@ ${message}`;
       </div>
 
       {/* Skills Section */}
-      <div id="skills" className="w-full min-h-screen pt-24 sm:pt-28 md:pt-32 lg:pt-40 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 sm:pb-10 md:pb-12">
+      <div id="skills" className="w-full pt-11 sm:pt-12 md:pt-11 lg:pt-13 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 lg:pb-12">
         <div className="container mx-auto max-w-7xl">
 
           {/* Section Title */}
@@ -533,7 +590,7 @@ ${message}`;
       </div>
 
       {/* Project Section */}
-      <div id="project" className="w-full min-h-screen pt-24 sm:pt-28 md:pt-32 lg:pt-40 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 sm:pb-10 md:pb-12">
+      <div id="project" className="w-full pt-11 sm:pt-12 md:pt-11 lg:pt-13 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 lg:pb-12">
         <div className="container mx-auto max-w-7xl">
 
           {/* Section Title */}
@@ -554,7 +611,7 @@ ${message}`;
           </div>
 
           {/* ChromaGrid Container - DYNAMIC! */}
-          <div className="w-full pb-8 sm:pb-10 md:pb-12" style={{ minHeight: '600px', height: 'auto', position: 'relative' }}>
+          <div className="w-full" style={{ minHeight: '600px', height: 'auto', position: 'relative' }}>
             <ChromaGrid 
               items={portfolioData.projects.map(project => ({
                 image: project.project_image_url,
@@ -575,7 +632,7 @@ ${message}`;
       </div>
 
       {/* Contact Section */}
-      <div id="contact" className="w-full min-h-screen pt-24 sm:pt-28 md:pt-32 lg:pt-40 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 sm:pb-10 md:pb-12">
+      <div id="contact" className="w-full min-h-screen pt-11 sm:pt-12 md:pt-11 lg:pt-13 px-4 sm:px-6 md:px-8 lg:px-12 pb-8 lg:pb-12">
         <div className="container mx-auto max-w-7xl">
 
           {/* Section Title */}
@@ -858,7 +915,7 @@ ${message}`;
                   </div>
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                      Taji Jadda
+                      Taji Jadda Giras Sentosa
                     </h3>
                     <p className="text-[10px] sm:text-xs text-white/40 mt-0.5">Web & IoT Developer</p>
                   </div>
@@ -968,7 +1025,7 @@ ${message}`;
                 </li>
                 <li className="flex items-start gap-2 text-xs sm:text-sm text-white/60">
                   <span className="text-sm mt-0.5">📍</span>
-                  <span>Gresik, Jawa Timur, Indonesia</span>
+                  <span>Dendang, Satabat, Kab. Langkat</span>
                 </li>
               </ul>
             </div>

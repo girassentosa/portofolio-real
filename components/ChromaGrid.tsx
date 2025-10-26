@@ -168,7 +168,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
           key={i}
           onMouseMove={handleCardMove}
           onClick={() => handleCardClick(c.url)}
-          className="group relative flex flex-col w-full sm:w-[340px] md:w-[380px] lg:w-[400px] h-[400px] sm:h-[420px] md:h-[450px] lg:h-[480px] rounded-[18px] sm:rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
+          className="group relative flex flex-col w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.833rem)] h-[400px] sm:h-[420px] md:h-[450px] lg:h-[480px] rounded-[18px] sm:rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
           style={{
             ['--card-border' as string]: c.borderColor || 'transparent',
             background: c.gradient,
@@ -183,7 +183,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
             }}
           />
           <div className="relative z-10 flex-1 p-[10px] sm:p-[12px] md:p-[14px] box-border min-h-0">
-            <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover rounded-[10px] sm:rounded-[12px]" />
+            <img src={c.image} alt={c.title} loading="lazy" width="400" height="300" className="w-full h-full object-cover rounded-[10px] sm:rounded-[12px]" />
           </div>
           <footer className="relative z-10 p-3 sm:p-4 md:p-5 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 sm:gap-x-3 gap-y-1">
             <h3 className="m-0 text-sm sm:text-base md:text-lg font-semibold">{c.title}</h3>

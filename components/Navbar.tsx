@@ -43,7 +43,27 @@ export default function Navbar() {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Responsive offset untuk semua devices
+      const width = window.innerWidth;
+      let headerOffset;
+      
+      if (width < 640) {
+        headerOffset = 55; // Mobile (< 640px)
+      } else if (width < 768) {
+        headerOffset = 60; // Small tablet (640px - 768px)
+      } else if (width < 1024) {
+        headerOffset = 85; // Medium tablet (768px - 1024px)
+      } else {
+        headerOffset = 100; // Desktop (≥ 1024px)
+      }
+      
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -59,7 +79,7 @@ export default function Navbar() {
           <Link href="/" className="group shrink-0">
             <div className="relative">
               <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent transition-all duration-300 group-hover:scale-110 inline-block">
-                Portfolio
+                Portofolio
               </span>
               <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-purple-600/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>

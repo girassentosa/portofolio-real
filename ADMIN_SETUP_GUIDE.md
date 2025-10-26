@@ -3,7 +3,7 @@
 ## 📚 **Struktur yang Sudah Dibuat:**
 
 ### ✅ **1. Database Schema** (`database/schema.sql`)
-- ✅ `admin_users` - Autentikasi admin (MD5 password)
+- ✅ `admin_users` - Autentikasi admin (MD5 password + photo profile)
 - ✅ `home_content` - Greeting, nama, deskripsi
 - ✅ `home_stats` - Stats cards (4 items)
 - ✅ `profile_card` - Profile card info
