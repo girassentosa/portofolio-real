@@ -7,14 +7,21 @@ import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphe
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
-// Assets paths
-const cardGLB = '/assets/lanyard/card.glb';
-const lanyard = '/assets/lanyard/lanyard.png';
-
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true }: LanyardProps) {
+export default function Lanyard({
+    position = [0, 0, 30],
+    gravity = [0, -40, 0],
+    fov = 20,
+    transparent = true,
+    cardFile = 'card.glb',
+    textureFile = 'lanyard.png'
+}: LanyardProps) {
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+    // Build full paths from filenames
+    const cardGLB = `/assets/lanyard/${cardFile}`;
+    const lanyardTexture = `/assets/lanyard/${textureFile}`;
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -32,7 +39,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
             >
                 <ambientLight intensity={Math.PI} />
                 <Physics gravity={gravity as [number, number, number]} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-                    <Band isMobile={isMobile} />
+                    <Band isMobile={isMobile} cardGLB={cardGLB} lanyardTexture={lanyardTexture} />
                 </Physics>
                 <Environment blur={0.75}>
                     <Lightformer
@@ -74,15 +81,19 @@ interface LanyardProps {
     gravity?: number[];
     fov?: number;
     transparent?: boolean;
+    cardFile?: string;
+    textureFile?: string;
 }
 
 interface BandProps {
     maxSpeed?: number;
     minSpeed?: number;
     isMobile?: boolean;
+    cardGLB: string;
+    lanyardTexture: string;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardTexture }: BandProps) {
     const band = useRef<THREE.Mesh>(null);
     const fixed = useRef<any>(null);
     const j1 = useRef<any>(null);
@@ -97,7 +108,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
 
     const segmentProps = { type: 'dynamic' as const, canSleep: true, colliders: false as const, angularDamping: 4, linearDamping: 4 };
     const { nodes, materials } = useGLTF(cardGLB) as any;
-    const texture = useTexture(lanyard);
+    const texture = useTexture(lanyardTexture);
     const [curve] = useState(
         () =>
             new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])

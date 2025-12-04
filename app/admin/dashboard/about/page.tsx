@@ -44,7 +44,8 @@ export default function AdminAbout() {
           who_am_i_content: aboutContent.who_am_i_content,
           my_approach_title: aboutContent.my_approach_title,
           my_approach_content: aboutContent.my_approach_content,
-          profile_photo_url: aboutContent.profile_photo_url,
+          lanyard_card_file: aboutContent.lanyard_card_file,
+          lanyard_texture_file: aboutContent.lanyard_texture_file,
           updated_at: new Date().toISOString(),
         })
         .eq('id', aboutContent.id);
@@ -175,43 +176,58 @@ export default function AdminAbout() {
         </div>
       </div>
 
-      {/* Profile Photo */}
+      {/* Lanyard Customization */}
       <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
         <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-          <span>📸</span>
-          <span>Profile Photo</span>
+          <span>🎴</span>
+          <span>Lanyard Customization</span>
         </h2>
+        <p className="text-sm text-gray-400 mb-4">
+          Atur file 3D card dan texture lanyard. File harus ada di folder <code className="px-2 py-1 bg-gray-700 rounded text-cyan-400">/public/assets/lanyard/</code>
+        </p>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Photo URL</label>
-          <input
-            type="text"
-            value={aboutContent?.profile_photo_url || ''}
-            onChange={(e) =>
-              setAboutContent(aboutContent ? { ...aboutContent, profile_photo_url: e.target.value } : null)
-            }
-            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition-all"
-            placeholder="/images/profile.jpg"
-          />
-          {/* Preview Profile Photo */}
-          {aboutContent?.profile_photo_url && (
-            <div className="mt-4 p-4 bg-gray-700/50 border border-gray-600 rounded-lg">
-              <p className="text-xs text-gray-400 mb-3">Preview Profile Photo:</p>
-              <div className="flex justify-center">
-                <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-lg overflow-hidden border-2 border-cyan-500/50 shadow-lg">
-                  <img
-                    src={aboutContent.profile_photo_url}
-                    alt="Profile Photo Preview"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/images/profile.jpg';
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Card File Name <span className="text-gray-500">(3D Model)</span>
+            </label>
+            <input
+              type="text"
+              value={aboutContent?.lanyard_card_file || ''}
+              onChange={(e) =>
+                setAboutContent(aboutContent ? { ...aboutContent, lanyard_card_file: e.target.value } : null)
+              }
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition-all"
+              placeholder="card.glb"
+            />
+            <p className="mt-1 text-xs text-gray-500">Contoh: card.glb, card1.glb, mycard.glb</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Texture File Name <span className="text-gray-500">(PNG Image)</span>
+            </label>
+            <input
+              type="text"
+              value={aboutContent?.lanyard_texture_file || ''}
+              onChange={(e) =>
+                setAboutContent(aboutContent ? { ...aboutContent, lanyard_texture_file: e.target.value } : null)
+              }
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition-all"
+              placeholder="lanyard.png"
+            />
+            <p className="mt-1 text-xs text-gray-500">Contoh: lanyard.png, lanyard1.png, mytexture.png</p>
+          </div>
+        </div>
+
+        <div className="mt-4 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+          <p className="text-sm text-blue-300 flex items-start gap-2">
+            <span className="text-lg">💡</span>
+            <span>
+              <strong>Cara menggunakan:</strong> Upload file .glb dan .png ke folder <code className="px-1 bg-blue-900/40 rounded">/public/assets/lanyard/</code>,
+              lalu ketik nama file di atas (termasuk ekstensi). Lanyard akan otomatis update di homepage!
+            </span>
+          </p>
         </div>
       </div>
 

@@ -439,6 +439,8 @@ ${message}`;
                     <Lanyard
                       position={[0, 0, 20]}
                       gravity={[0, -40, 0]}
+                      cardFile={portfolioData.aboutContent?.lanyard_card_file}
+                      textureFile={portfolioData.aboutContent?.lanyard_texture_file}
                     />
                   </div>
 

@@ -140,7 +140,8 @@ CREATE TABLE about_content (
   who_am_i_content TEXT NOT NULL,
   my_approach_title VARCHAR(100) NOT NULL DEFAULT 'My Approach',
   my_approach_content TEXT NOT NULL,
-  profile_photo_url TEXT NOT NULL,
+  lanyard_card_file VARCHAR(100) NOT NULL DEFAULT 'card.glb',
+  lanyard_texture_file VARCHAR(100) NOT NULL DEFAULT 'lanyard.png',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -148,7 +149,8 @@ CREATE TABLE about_content (
 COMMENT ON TABLE about_content IS 'Main content untuk About section';
 COMMENT ON COLUMN about_content.who_am_i_title IS 'Title untuk "Who am I" section';
 COMMENT ON COLUMN about_content.my_approach_title IS 'Title untuk "My Approach" section';
-COMMENT ON COLUMN about_content.profile_photo_url IS 'Profile photo URL untuk About section';
+COMMENT ON COLUMN about_content.lanyard_card_file IS 'Nama file 3D card untuk lanyard (e.g., card.glb, card1.glb)';
+COMMENT ON COLUMN about_content.lanyard_texture_file IS 'Nama file texture untuk lanyard (e.g., lanyard.png, lanyard1.png)';
 
 
 -- =====================================================
@@ -390,12 +392,13 @@ INSERT INTO profile_card (name, title, handle, status, contact_text, avatar_url,
 -- DEFAULT DATA: About Section
 -- =====================================================
 
-INSERT INTO about_content (who_am_i_title, who_am_i_content, my_approach_title, my_approach_content, profile_photo_url) VALUES (
+INSERT INTO about_content (who_am_i_title, who_am_i_content, my_approach_title, my_approach_content, lanyard_card_file, lanyard_texture_file) VALUES (
   'Who am I',
   'Saya adalah seorang Software Engineer dengan passion dalam pengembangan web modern dan teknologi IoT. Dengan pengalaman 2+ tahun, saya telah mengerjakan berbagai proyek yang menggabungkan kreativitas dan teknologi.',
   'My Approach',
   'Saya percaya bahwa kode yang baik adalah kode yang clean, maintainable, dan scalable. Saya selalu berusaha untuk menulis kode yang tidak hanya berfungsi, tetapi juga mudah dipahami oleh developer lain. Setiap project adalah kesempatan untuk belajar dan berkembang.',
-  '/images/profile.jpg'
+  'card.glb',
+  'lanyard.png'
 );
 
 INSERT INTO personal_info (info_key, info_label, info_value, info_icon, display_order) VALUES

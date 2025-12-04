@@ -50,7 +50,8 @@ export interface AboutContent {
   who_am_i_content: string;
   my_approach_title: string;
   my_approach_content: string;
-  profile_photo_url: string;
+  lanyard_card_file: string;
+  lanyard_texture_file: string;
   created_at: string;
   updated_at: string;
 }
