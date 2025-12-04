@@ -1058,6 +1058,22 @@ body[data-page-loading="false"] header {
   mix-blend-mode: luminosity;
 }
 
+.pc-avatar-content {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--card-radius);
+  display: block;
+}
+
 .pc-details {
   width: 100%;
   position: absolute;

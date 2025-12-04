@@ -123,7 +123,7 @@ const VARIANTS = {
     activeColor: '#e0f2fe',
     gap: 10,
     speed: 25,
-    colors: '#e0f2fe,#7dd3fc,#0ea5e9',
+    colors: '#1a1a1a,#262626,#404040',
     noFocus: false
   },
   yellow: {
@@ -152,14 +152,14 @@ interface PixelCardProps {
   children: React.ReactNode;
 }
 
-export default function PixelCard({ 
-  variant = 'default', 
-  gap, 
-  speed, 
-  colors, 
-  noFocus, 
-  className = '', 
-  children 
+export default function PixelCard({
+  variant = 'default',
+  gap,
+  speed,
+  colors,
+  noFocus,
+  className = '',
+  children
 }: PixelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -167,8 +167,8 @@ export default function PixelCard({
   const animationRef = useRef<number | null>(null);
   const timePreviousRef = useRef(performance.now());
   const reducedMotion = useRef(
-    typeof window !== 'undefined' 
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches 
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false
   ).current;
 

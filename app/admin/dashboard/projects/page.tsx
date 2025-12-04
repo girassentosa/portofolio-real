@@ -27,6 +27,12 @@ export default function AdminProjects() {
     is_active: true,
   });
 
+  // Gradient helper states
+  const [editGradientStart, setEditGradientStart] = useState('#3B82F6');
+  const [editGradientEnd, setEditGradientEnd] = useState('#000');
+  const [newGradientStart, setNewGradientStart] = useState('#3B82F6');
+  const [newGradientEnd, setNewGradientEnd] = useState('#000');
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -53,7 +59,7 @@ export default function AdminProjects() {
       const { error } = await supabase.from('projects').insert([newProject]);
 
       if (error) throw error;
-      
+
       showSuccess('Project berhasil ditambahkan!');
       setShowAddModal(false);
       setNewProject({
@@ -98,7 +104,7 @@ export default function AdminProjects() {
         .eq('id', project.id);
 
       if (error) throw error;
-      
+
       showSuccess('Project berhasil diupdate!');
       setEditingProject(null);
       fetchProjects();
@@ -118,7 +124,7 @@ export default function AdminProjects() {
       const { error } = await supabase.from('projects').delete().eq('id', id);
 
       if (error) throw error;
-      
+
       showSuccess('Project berhasil dihapus!');
       fetchProjects();
     } catch (error) {
@@ -156,8 +162,8 @@ export default function AdminProjects() {
     <div className="space-y-6">
       {/* Toast Notification */}
       {successMessage && (
-        <Toast 
-          message={successMessage} 
+        <Toast
+          message={successMessage}
           onClose={() => setSuccessMessage('')}
         />
       )}
@@ -182,9 +188,8 @@ export default function AdminProjects() {
         {projects.map((project) => (
           <div
             key={project.id}
-            className={`bg-gray-800 rounded-xl overflow-hidden border ${
-              project.is_active ? 'border-gray-700' : 'border-gray-700/50 opacity-60'
-            }`}
+            className={`bg-gray-800 rounded-xl overflow-hidden border ${project.is_active ? 'border-gray-700' : 'border-gray-700/50 opacity-60'
+              }`}
           >
             {/* Project Image */}
             <div className="relative h-48 bg-gray-900">
@@ -201,11 +206,10 @@ export default function AdminProjects() {
               <div className="absolute top-3 right-3">
                 <button
                   onClick={() => toggleActive(project)}
-                  className={`px-3 py-1 rounded text-xs font-medium backdrop-blur-sm ${
-                    project.is_active
-                      ? 'bg-green-500/80 text-white'
-                      : 'bg-gray-700/80 text-gray-300'
-                  }`}
+                  className={`px-3 py-1 rounded text-xs font-medium backdrop-blur-sm ${project.is_active
+                    ? 'bg-green-500/80 text-white'
+                    : 'bg-gray-700/80 text-gray-300'
+                    }`}
                 >
                   {project.is_active ? 'Active' : 'Hidden'}
                 </button>
@@ -216,7 +220,7 @@ export default function AdminProjects() {
             <div className="p-5">
               <h3 className="text-white font-bold text-lg mb-1">{project.project_title}</h3>
               <p className="text-gray-400 text-sm mb-2">{project.project_subtitle}</p>
-              
+
               {project.project_handle && (
                 <p className="text-cyan-400 text-xs mb-3">📁 {project.project_handle}</p>
               )}
@@ -360,15 +364,26 @@ export default function AdminProjects() {
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>
-                  <input
-                    type="text"
-                    value={editingProject.border_color}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, border_color: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="#3B82F6"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={editingProject.border_color}
+                      onChange={(e) =>
+                        setEditingProject({ ...editingProject, border_color: e.target.value })
+                      }
+                      className="w-14 h-12 rounded cursor-pointer border border-gray-600"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={editingProject.border_color}
+                      onChange={(e) =>
+                        setEditingProject({ ...editingProject, border_color: e.target.value })
+                      }
+                      className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                      placeholder="#3B82F6"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -382,6 +397,69 @@ export default function AdminProjects() {
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
                     placeholder="linear-gradient(145deg, #3B82F6, #000)"
                   />
+                  <div className="mt-3 p-2 sm:p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+                    <p className="text-xs text-gray-400 mb-2">💡 Gradient Helper (opsional):</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">Start Color</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={editGradientStart}
+                            onChange={(e) => {
+                              setEditGradientStart(e.target.value);
+                              setEditingProject({
+                                ...editingProject,
+                                gradient: `linear-gradient(145deg, ${e.target.value}, ${editGradientEnd})`
+                              });
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-8 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                          />
+                          <input
+                            type="text"
+                            value={editGradientStart}
+                            onChange={(e) => {
+                              setEditGradientStart(e.target.value);
+                              setEditingProject({
+                                ...editingProject,
+                                gradient: `linear-gradient(145deg, ${e.target.value}, ${editGradientEnd})`
+                              });
+                            }}
+                            className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs min-w-0"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">End Color</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={editGradientEnd}
+                            onChange={(e) => {
+                              setEditGradientEnd(e.target.value);
+                              setEditingProject({
+                                ...editingProject,
+                                gradient: `linear-gradient(145deg, ${editGradientStart}, ${e.target.value})`
+                              });
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-8 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                          />
+                          <input
+                            type="text"
+                            value={editGradientEnd}
+                            onChange={(e) => {
+                              setEditGradientEnd(e.target.value);
+                              setEditingProject({
+                                ...editingProject,
+                                gradient: `linear-gradient(145deg, ${editGradientStart}, ${e.target.value})`
+                              });
+                            }}
+                            className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs min-w-0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -501,13 +579,22 @@ export default function AdminProjects() {
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>
-                  <input
-                    type="text"
-                    value={newProject.border_color}
-                    onChange={(e) => setNewProject({ ...newProject, border_color: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="#3B82F6"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={newProject.border_color}
+                      onChange={(e) => setNewProject({ ...newProject, border_color: e.target.value })}
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={newProject.border_color}
+                      onChange={(e) => setNewProject({ ...newProject, border_color: e.target.value })}
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#3B82F6"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -519,6 +606,69 @@ export default function AdminProjects() {
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
                     placeholder="linear-gradient(145deg, #3B82F6, #000)"
                   />
+                  <div className="mt-3 p-2 sm:p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+                    <p className="text-xs text-gray-400 mb-2">💡 Gradient Helper (opsional):</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">Start Color</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={newGradientStart}
+                            onChange={(e) => {
+                              setNewGradientStart(e.target.value);
+                              setNewProject({
+                                ...newProject,
+                                gradient: `linear-gradient(145deg, ${e.target.value}, ${newGradientEnd})`
+                              });
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-8 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                          />
+                          <input
+                            type="text"
+                            value={newGradientStart}
+                            onChange={(e) => {
+                              setNewGradientStart(e.target.value);
+                              setNewProject({
+                                ...newProject,
+                                gradient: `linear-gradient(145deg, ${e.target.value}, ${newGradientEnd})`
+                              });
+                            }}
+                            className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs min-w-0"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">End Color</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={newGradientEnd}
+                            onChange={(e) => {
+                              setNewGradientEnd(e.target.value);
+                              setNewProject({
+                                ...newProject,
+                                gradient: `linear-gradient(145deg, ${newGradientStart}, ${e.target.value})`
+                              });
+                            }}
+                            className="w-8 h-8 sm:w-10 sm:h-8 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                          />
+                          <input
+                            type="text"
+                            value={newGradientEnd}
+                            onChange={(e) => {
+                              setNewGradientEnd(e.target.value);
+                              setNewProject({
+                                ...newProject,
+                                gradient: `linear-gradient(145deg, ${newGradientStart}, ${e.target.value})`
+                              });
+                            }}
+                            className="flex-1 px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs min-w-0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

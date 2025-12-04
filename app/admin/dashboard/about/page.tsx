@@ -2,25 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { AboutContent, PersonalInfo } from '@/types/database';
+import { AboutContent, HomeStat } from '@/types/database';
 import Toast from '@/components/Toast';
 
 export default function AdminAbout() {
   const [aboutContent, setAboutContent] = useState<AboutContent | null>(null);
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo[]>([]);
+  const [stats, setStats] = useState<HomeStat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [editingInfo, setEditingInfo] = useState<PersonalInfo | null>(null);
-  const [showAddModal, setShowAddModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
-  const [newInfo, setNewInfo] = useState<Partial<PersonalInfo>>({
-    info_key: '',
-    info_label: '',
-    info_value: '',
-    info_icon: '📌',
-    display_order: 0,
-  });
 
   useEffect(() => {
     fetchAllData();
@@ -28,13 +18,13 @@ export default function AdminAbout() {
 
   const fetchAllData = async () => {
     try {
-      const [aboutRes, infoRes] = await Promise.all([
+      const [aboutRes, statsRes] = await Promise.all([
         supabase.from('about_content').select('*').single(),
-        supabase.from('personal_info').select('*').order('display_order'),
+        supabase.from('home_stats').select('*').order('display_order'),
       ]);
 
       if (aboutRes.data) setAboutContent(aboutRes.data);
-      if (infoRes.data) setPersonalInfo(infoRes.data);
+      if (statsRes.data) setStats(statsRes.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -69,72 +59,30 @@ export default function AdminAbout() {
     }
   };
 
-  const addPersonalInfo = async () => {
+  const saveAllStats = async () => {
     setIsSaving(true);
+
     try {
-      const { error } = await supabase.from('personal_info').insert([newInfo]);
+      // Update all stats
+      const updates = stats.map((stat) =>
+        supabase
+          .from('home_stats')
+          .update({
+            stat_value: stat.stat_value,
+            stat_label: stat.stat_label,
+            icon: stat.icon,
+            gradient_from: stat.gradient_from,
+            gradient_to: stat.gradient_to,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', stat.id)
+      );
 
-      if (error) throw error;
-      
-      showSuccess('Personal info berhasil ditambahkan!');
-      setShowAddModal(false);
-      setNewInfo({
-        info_key: '',
-        info_label: '',
-        info_value: '',
-        info_icon: '📌',
-        display_order: 0,
-      });
-      fetchAllData();
+      await Promise.all(updates);
+      showSuccess('Semua stats berhasil disimpan!');
     } catch (error) {
-      console.error('Error adding personal info:', error);
-      alert('Gagal menambahkan personal info');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const updatePersonalInfo = async (info: PersonalInfo) => {
-    setIsSaving(true);
-    try {
-      const { error } = await supabase
-        .from('personal_info')
-        .update({
-          info_label: info.info_label,
-          info_value: info.info_value,
-          info_icon: info.info_icon,
-          display_order: info.display_order,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', info.id);
-
-      if (error) throw error;
-      
-      showSuccess('Personal info berhasil diupdate!');
-      setEditingInfo(null);
-      fetchAllData();
-    } catch (error) {
-      console.error('Error updating personal info:', error);
-      alert('Gagal mengupdate personal info');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const deletePersonalInfo = async (id: number) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus item ini?')) return;
-
-    setIsSaving(true);
-    try {
-      const { error } = await supabase.from('personal_info').delete().eq('id', id);
-
-      if (error) throw error;
-      
-      showSuccess('Personal info berhasil dihapus!');
-      fetchAllData();
-    } catch (error) {
-      console.error('Error deleting personal info:', error);
-      alert('Gagal menghapus personal info');
+      console.error('Error saving stats:', error);
+      alert('Gagal menyimpan stats');
     } finally {
       setIsSaving(false);
     }
@@ -153,8 +101,8 @@ export default function AdminAbout() {
     <div className="space-y-6">
       {/* Toast Notification */}
       {successMessage && (
-        <Toast 
-          message={successMessage} 
+        <Toast
+          message={successMessage}
           onClose={() => setSuccessMessage('')}
         />
       )}
@@ -276,212 +224,137 @@ export default function AdminAbout() {
         {isSaving ? 'Menyimpan...' : '💾 Simpan Semua About Content'}
       </button>
 
-      {/* Personal Info Section */}
+      {/* Stats Section (Moved from Home) */}
       <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-            <span>📋</span>
-            <span>Personal Info</span>
-          </h2>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition-all flex items-center gap-2 text-sm"
-          >
-            <span>➕</span>
-            <span>Tambah</span>
-          </button>
-        </div>
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span>📊</span>
+          <span>Stats Cards</span>
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {personalInfo.map((info) => (
-            <div key={info.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{info.info_icon}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {stats.map((stat) => (
+            <div key={stat.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <h3 className="text-white font-bold text-sm">{info.info_label}</h3>
-                    <p className="text-gray-400 text-xs mt-1">{info.info_value}</p>
+                    <label className="block text-xs text-gray-400 mb-1">Icon</label>
+                    <input
+                      type="text"
+                      value={stat.icon}
+                      onChange={(e) => {
+                        const updated = stats.map((s) =>
+                          s.id === stat.id ? { ...s, icon: e.target.value } : s
+                        );
+                        setStats(updated);
+                      }}
+                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Value</label>
+                    <input
+                      type="text"
+                      value={stat.stat_value}
+                      onChange={(e) => {
+                        const updated = stats.map((s) =>
+                          s.id === stat.id ? { ...s, stat_value: e.target.value } : s
+                        );
+                        setStats(updated);
+                      }}
+                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
+                    />
                   </div>
                 </div>
-              </div>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setEditingInfo(info)}
-                  className="flex-1 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium rounded transition-all"
-                >
-                  ✏️ Edit
-                </button>
-                <button
-                  onClick={() => deletePersonalInfo(info.id)}
-                  className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-all"
-                >
-                  🗑️ Hapus
-                </button>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Label</label>
+                  <input
+                    type="text"
+                    value={stat.stat_label}
+                    onChange={(e) => {
+                      const updated = stats.map((s) =>
+                        s.id === stat.id ? { ...s, stat_label: e.target.value } : s
+                      );
+                      setStats(updated);
+                    }}
+                    className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Gradient From</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="color"
+                        value={stat.gradient_from}
+                        onChange={(e) => {
+                          const updated = stats.map((s) =>
+                            s.id === stat.id ? { ...s, gradient_from: e.target.value } : s
+                          );
+                          setStats(updated);
+                        }}
+                        className="w-10 h-10 sm:w-12 sm:h-10 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                        title="Pick color"
+                      />
+                      <input
+                        type="text"
+                        value={stat.gradient_from}
+                        onChange={(e) => {
+                          const updated = stats.map((s) =>
+                            s.id === stat.id ? { ...s, gradient_from: e.target.value } : s
+                          );
+                          setStats(updated);
+                        }}
+                        className="flex-1 px-2 sm:px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-xs sm:text-sm min-w-0"
+                        placeholder="#06b6d4"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Gradient To</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="color"
+                        value={stat.gradient_to}
+                        onChange={(e) => {
+                          const updated = stats.map((s) =>
+                            s.id === stat.id ? { ...s, gradient_to: e.target.value } : s
+                          );
+                          setStats(updated);
+                        }}
+                        className="w-10 h-10 sm:w-12 sm:h-10 rounded cursor-pointer border border-gray-500 flex-shrink-0"
+                        title="Pick color"
+                      />
+                      <input
+                        type="text"
+                        value={stat.gradient_to}
+                        onChange={(e) => {
+                          const updated = stats.map((s) =>
+                            s.id === stat.id ? { ...s, gradient_to: e.target.value } : s
+                          );
+                          setStats(updated);
+                        }}
+                        className="flex-1 px-2 sm:px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-xs sm:text-sm min-w-0"
+                        placeholder="#3b82f6"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Save All Stats Button */}
+        <button
+          onClick={saveAllStats}
+          disabled={isSaving}
+          className="mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-lg transition-all disabled:opacity-50"
+        >
+          {isSaving ? 'Menyimpan...' : 'Simpan Semua Stats'}
+        </button>
       </div>
-
-      {/* Edit Personal Info Modal */}
-      {editingInfo && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-2xl p-6 max-w-lg w-full border border-gray-700">
-            <h3 className="text-2xl font-bold text-white mb-6">Edit Personal Info</h3>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Icon</label>
-                <input
-                  type="text"
-                  value={editingInfo.info_icon}
-                  onChange={(e) => setEditingInfo({ ...editingInfo, info_icon: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Label</label>
-                <input
-                  type="text"
-                  value={editingInfo.info_label}
-                  onChange={(e) => setEditingInfo({ ...editingInfo, info_label: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Value</label>
-                <input
-                  type="text"
-                  value={editingInfo.info_value}
-                  onChange={(e) => setEditingInfo({ ...editingInfo, info_value: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Display Order</label>
-                <input
-                  type="number"
-                  value={editingInfo.display_order}
-                  onChange={(e) =>
-                    setEditingInfo({ ...editingInfo, display_order: parseInt(e.target.value) })
-                  }
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => updatePersonalInfo(editingInfo)}
-                  disabled={isSaving}
-                  className="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-lg transition-all disabled:opacity-50"
-                >
-                  {isSaving ? 'Menyimpan...' : 'Simpan'}
-                </button>
-                <button
-                  onClick={() => setEditingInfo(null)}
-                  className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all"
-                >
-                  Batal
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Personal Info Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-2xl p-6 max-w-lg w-full border border-gray-700">
-            <h3 className="text-2xl font-bold text-white mb-6">Tambah Personal Info</h3>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Key (Unique ID) *</label>
-                <input
-                  type="text"
-                  value={newInfo.info_key}
-                  onChange={(e) => setNewInfo({ ...newInfo, info_key: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  placeholder="e.g., email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Icon</label>
-                <input
-                  type="text"
-                  value={newInfo.info_icon}
-                  onChange={(e) => setNewInfo({ ...newInfo, info_icon: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  placeholder="📧"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Label *</label>
-                <input
-                  type="text"
-                  value={newInfo.info_label}
-                  onChange={(e) => setNewInfo({ ...newInfo, info_label: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  placeholder="Email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Value *</label>
-                <input
-                  type="text"
-                  value={newInfo.info_value}
-                  onChange={(e) => setNewInfo({ ...newInfo, info_value: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  placeholder="your@email.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">Display Order</label>
-                <input
-                  type="number"
-                  value={newInfo.display_order}
-                  onChange={(e) => setNewInfo({ ...newInfo, display_order: parseInt(e.target.value) })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={addPersonalInfo}
-                  disabled={isSaving || !newInfo.info_key || !newInfo.info_label || !newInfo.info_value}
-                  className="flex-1 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSaving ? 'Menambahkan...' : 'Tambah'}
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAddModal(false);
-                    setNewInfo({
-                      info_key: '',
-                      info_label: '',
-                      info_value: '',
-                      info_icon: '📌',
-                      display_order: 0,
-                    });
-                  }}
-                  className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all"
-                >
-                  Batal
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

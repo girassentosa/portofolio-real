@@ -50,7 +50,7 @@ export default function AdminSkills() {
       const { error } = await supabase.from('skills').insert([newSkill]);
 
       if (error) throw error;
-      
+
       showSuccess('Skill berhasil ditambahkan!');
       setShowAddModal(false);
       setNewSkill({
@@ -91,7 +91,7 @@ export default function AdminSkills() {
         .eq('id', skill.id);
 
       if (error) throw error;
-      
+
       showSuccess('Skill berhasil diupdate!');
       setEditingSkill(null);
       fetchSkills();
@@ -111,7 +111,7 @@ export default function AdminSkills() {
       const { error } = await supabase.from('skills').delete().eq('id', id);
 
       if (error) throw error;
-      
+
       showSuccess('Skill berhasil dihapus!');
       fetchSkills();
     } catch (error) {
@@ -149,8 +149,8 @@ export default function AdminSkills() {
     <div className="space-y-6">
       {/* Toast Notification */}
       {successMessage && (
-        <Toast 
-          message={successMessage} 
+        <Toast
+          message={successMessage}
           onClose={() => setSuccessMessage('')}
         />
       )}
@@ -175,9 +175,8 @@ export default function AdminSkills() {
         {skills.map((skill) => (
           <div
             key={skill.id}
-            className={`bg-gray-800 rounded-xl p-5 border ${
-              skill.is_active ? 'border-gray-700' : 'border-gray-700/50 opacity-60'
-            }`}
+            className={`bg-gray-800 rounded-xl p-5 border ${skill.is_active ? 'border-gray-700' : 'border-gray-700/50 opacity-60'
+              }`}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
@@ -189,11 +188,10 @@ export default function AdminSkills() {
               </div>
               <button
                 onClick={() => toggleActive(skill)}
-                className={`px-3 py-1 rounded text-xs font-medium ${
-                  skill.is_active
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-gray-700 text-gray-400'
-                }`}
+                className={`px-3 py-1 rounded text-xs font-medium ${skill.is_active
+                  ? 'bg-green-500/20 text-green-400'
+                  : 'bg-gray-700 text-gray-400'
+                  }`}
               >
                 {skill.is_active ? 'Active' : 'Hidden'}
               </button>
@@ -293,38 +291,74 @@ export default function AdminSkills() {
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Gradient From</label>
-                  <input
-                    type="text"
-                    value={editingSkill.gradient_from}
-                    onChange={(e) =>
-                      setEditingSkill({ ...editingSkill, gradient_from: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={editingSkill.gradient_from}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, gradient_from: e.target.value })
+                      }
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={editingSkill.gradient_from}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, gradient_from: e.target.value })
+                      }
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#06b6d4"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Gradient To</label>
-                  <input
-                    type="text"
-                    value={editingSkill.gradient_to}
-                    onChange={(e) =>
-                      setEditingSkill({ ...editingSkill, gradient_to: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={editingSkill.gradient_to}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, gradient_to: e.target.value })
+                      }
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={editingSkill.gradient_to}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, gradient_to: e.target.value })
+                      }
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#3b82f6"
+                    />
+                  </div>
                 </div>
 
                 <div className="col-span-2">
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>
-                  <input
-                    type="text"
-                    value={editingSkill.border_color}
-                    onChange={(e) =>
-                      setEditingSkill({ ...editingSkill, border_color: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={editingSkill.border_color}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, border_color: e.target.value })
+                      }
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={editingSkill.border_color}
+                      onChange={(e) =>
+                        setEditingSkill({ ...editingSkill, border_color: e.target.value })
+                      }
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#06b6d4"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -403,35 +437,62 @@ export default function AdminSkills() {
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Gradient From</label>
-                  <input
-                    type="text"
-                    value={newSkill.gradient_from}
-                    onChange={(e) => setNewSkill({ ...newSkill, gradient_from: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="#06b6d4"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={newSkill.gradient_from}
+                      onChange={(e) => setNewSkill({ ...newSkill, gradient_from: e.target.value })}
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={newSkill.gradient_from}
+                      onChange={(e) => setNewSkill({ ...newSkill, gradient_from: e.target.value })}
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#06b6d4"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Gradient To</label>
-                  <input
-                    type="text"
-                    value={newSkill.gradient_to}
-                    onChange={(e) => setNewSkill({ ...newSkill, gradient_to: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="#3b82f6"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={newSkill.gradient_to}
+                      onChange={(e) => setNewSkill({ ...newSkill, gradient_to: e.target.value })}
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={newSkill.gradient_to}
+                      onChange={(e) => setNewSkill({ ...newSkill, gradient_to: e.target.value })}
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#3b82f6"
+                    />
+                  </div>
                 </div>
 
                 <div className="col-span-2">
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>
-                  <input
-                    type="text"
-                    value={newSkill.border_color}
-                    onChange={(e) => setNewSkill({ ...newSkill, border_color: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="#06b6d4"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="color"
+                      value={newSkill.border_color}
+                      onChange={(e) => setNewSkill({ ...newSkill, border_color: e.target.value })}
+                      className="w-12 h-12 sm:w-14 sm:h-12 rounded cursor-pointer border border-gray-600 flex-shrink-0"
+                      title="Pick color"
+                    />
+                    <input
+                      type="text"
+                      value={newSkill.border_color}
+                      onChange={(e) => setNewSkill({ ...newSkill, border_color: e.target.value })}
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm sm:text-base min-w-0"
+                      placeholder="#06b6d4"
+                    />
+                  </div>
                 </div>
               </div>
 

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import ProfileCard from '@/components/ProfileCard';
 import TextType from '@/components/TextType';
 import TrueFocus from '@/components/TrueFocus';
+import Lanyard from '@/components/Lanyard';
+
 
 import PixelCard from '@/components/PixelCard';
 import ChromaGrid from '@/components/ChromaGrid';
@@ -191,15 +193,11 @@ ${message}`;
           </div>
 
           {/* Loading Text */}
-          <div className="space-y-3">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
-              Loading Portofolio
-            </h2>
-            <div className="flex justify-center gap-1.5">
-              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-            </div>
+          {/* Loading Animation */}
+          <div className="mt-8 flex justify-center gap-2">
+            <div className="w-2.5 h-2.5 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2.5 h-2.5 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
           </div>
         </div>
       </div>
@@ -234,43 +232,46 @@ ${message}`;
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
             {/* Left Column - Text Content */}
-            <div className="text-white order-2 lg:order-1">
+            <div className="text-white order-2 lg:order-1 flex flex-col gap-6 sm:gap-8">
 
-              {/* Greeting with TrueFocus Effect - DYNAMIC! */}
-              <div className="text-base sm:text-lg md:text-xl text-white/70 leading-tight">
-                <TrueFocus
-                  sentence={portfolioData.homeContent?.greeting || 'Halo, saya'}
-                  manualMode={false}
-                  blurAmount={5}
-                  borderColor="#06b6d4"
-                  glowColor="rgba(6, 182, 212, 0.6)"
-                  animationDuration={0.5}
-                  pauseBetweenAnimations={0.5}
-                />
-              </div>
+              {/* Header Group (Greeting & Name) */}
+              <div className="flex flex-col gap-2 sm:gap-3">
+                {/* Greeting with TrueFocus Effect - DYNAMIC! */}
+                <div className="text-base sm:text-lg md:text-xl text-white/70 leading-tight">
+                  <TrueFocus
+                    sentence={portfolioData.homeContent?.greeting || 'Halo, saya'}
+                    manualMode={false}
+                    blurAmount={5}
+                    borderColor="#06b6d4"
+                    glowColor="rgba(6, 182, 212, 0.6)"
+                    animationDuration={0.5}
+                    pauseBetweenAnimations={0.5}
+                  />
+                </div>
 
-              {/* Name with Typing Effect - DYNAMIC! */}
-              <div className="w-full mt-3 sm:mt-3 md:mt-3 lg:mt-3">
-                <TextType
-                  as="h1"
-                  text={portfolioData.homeContent?.name || 'Your Name'}
-                  typingSpeed={75}
-                  pauseDuration={1500}
-                  showCursor={true}
-                  cursorCharacter="|"
-                  loop={true}
-                  className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight break-words"
-                  cursorClassName="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
-                />
+                {/* Name with Typing Effect - DYNAMIC! */}
+                <div className="w-full">
+                  <TextType
+                    as="h1"
+                    text={portfolioData.homeContent?.name || 'Your Name'}
+                    typingSpeed={75}
+                    pauseDuration={1500}
+                    showCursor={true}
+                    cursorCharacter="|"
+                    loop={true}
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent leading-tight break-words drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                    cursorClassName="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                  />
+                </div>
               </div>
 
               {/* Description with Decrypted Text Effect - DYNAMIC! */}
-              <div className="w-full mt-3 sm:mt-3 md:mt-3 lg:mt-3 text-sm sm:text-base md:text-lg lg:text-xl text-white/80 leading-normal sm:leading-normal md:leading-relaxed text-justify">
+              <div className="w-full text-sm sm:text-base md:text-lg lg:text-xl text-white/80 leading-normal sm:leading-normal md:leading-relaxed text-justify">
                 {portfolioData.homeContent?.description || 'Your description here'}
               </div>
 
               {/* Social Media */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 animate-fade-in-up mt-4 sm:mt-4 md:mt-4 lg:mt-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 animate-fade-in-up">
                 <span className="text-xs sm:text-sm md:text-base text-white/70">Ikuti saya:</span>
                 <div className="flex items-center gap-2 sm:gap-3">
                   {/* GitHub */}
@@ -284,11 +285,22 @@ ${message}`;
                       <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                     </svg>
                   </a>
+                  {/* LinkedIn */}
+                  <a
+                    href="https://www.linkedin.com/in/taji-jadda-giras-sentosa-b56601389?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-blue-600/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 hover:scale-110"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                  </a>
                 </div>
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-4 md:mt-4 lg:mt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
                 <button
                   onClick={() => scrollToSection('#project')}
                   className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50"
@@ -309,31 +321,13 @@ ${message}`;
                 </button>
               </div>
 
-              {/* Stats Cards - DYNAMIC! */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-2 md:gap-2.5 mt-4 sm:mt-4 md:mt-4 lg:mt-4">
-                {portfolioData.homeStats.map((stat) => (
-                  <div
-                    key={stat.id}
-                    className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 text-center hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
-                  >
-                    <div
-                      className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent leading-tight"
-                      style={{
-                        backgroundImage: `linear-gradient(to right, ${stat.gradient_from}, ${stat.gradient_to})`
-                      }}
-                    >
-                      {stat.stat_value}
-                    </div>
-                    <div className="text-[9px] sm:text-[10px] md:text-xs text-white/60 mt-0.5 sm:mt-1 leading-tight">{stat.stat_label}</div>
-                  </div>
-                ))}
-              </div>
+              {/* Stats Cards moved to About Section */}
 
             </div>
 
             {/* Right Column - Profile Card - DYNAMIC! */}
             <div className="flex justify-center lg:justify-end order-1 lg:order-2">
-              <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] xl:max-w-[420px]">
+              <div className="w-full max-w-[220px] sm:max-w-[260px] md:max-w-[300px] lg:max-w-[340px] xl:max-w-[360px]">
                 {portfolioData.profileCard && (
                   <ProfileCard
                     avatarUrl={portfolioData.profileCard.avatar_url}
@@ -380,108 +374,79 @@ ${message}`;
           {/* About Content Grid */}
           <div className="relative space-y-6 lg:space-y-8">
 
-            {/* Main Grid Container */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+            {/* Border Container with Gradient */}
+            <div className="relative p-[2px] rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600">
+              {/* Inner Container */}
+              <div className="relative bg-black rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8">
 
-              {/* Left Column - Who am I and Personal Info */}
-              <div className="lg:col-span-9 space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1">
+                {/* Main Grid Container */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center">
 
-                {/* Top Row - Who am I and My Approach */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
+                  {/* Left Column - Who am I and My Approach */}
+                  <div className="lg:col-span-8 space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1">
 
-                  {/* Who am I - DYNAMIC! */}
-                  <PixelCard variant="blue" className="w-full">
-                    <div className="p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4">
-                      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                        Who am I
-                      </h2>
-                      <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
-                        {portfolioData.aboutContent?.who_am_i_content || 'Content not available'}
-                      </p>
-                    </div>
-                  </PixelCard>
+                    {/* Combined Who am I & My Approach - DYNAMIC! */}
+                    <PixelCard variant="blue" className="w-full">
+                      <div className="p-4 sm:p-5 md:p-6 space-y-6 sm:space-y-8">
 
-                  {/* My Approach - DYNAMIC! */}
-                  <PixelCard variant="yellow" className="w-full">
-                    <div className="p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4">
-                      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                        My Approach
-                      </h2>
-                      <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
-                        {portfolioData.aboutContent?.my_approach_content || 'Content not available'}
-                      </p>
-                    </div>
-                  </PixelCard>
+                        {/* Who am I Section */}
+                        <div className="space-y-2.5 sm:space-y-3">
+                          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                            Who am I
+                          </h2>
+                          <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
+                            {portfolioData.aboutContent?.who_am_i_content || 'Content not available'}
+                          </p>
+                        </div>
 
-                </div>
+                        {/* My Approach Section */}
+                        <div className="space-y-2.5 sm:space-y-3">
+                          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                            My Approach
+                          </h2>
+                          <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
+                            {portfolioData.aboutContent?.my_approach_content || 'Content not available'}
+                          </p>
+                        </div>
 
-                {/* Personal Info - DYNAMIC! */}
-                <PixelCard variant="pink" className="w-full">
-                  <div className="p-4 sm:p-5 md:p-6 space-y-3">
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                      Personal Info
-                    </h2>
+                      </div>
+                    </PixelCard>
 
-                    {/* Grid 2 kolom untuk info selain address */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                      {portfolioData.personalInfo
-                        .filter(info => info.info_key !== 'address')
-                        .map((info) => (
-                          <div
-                            key={info.id}
-                            className="flex items-start gap-2 p-2 sm:p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300"
-                          >
-                            <span className="text-base sm:text-lg">{info.info_icon}</span>
-                            <div>
-                              <p className="text-[9px] sm:text-[10px] text-white/60">{info.info_label}</p>
-                              <p className="text-xs sm:text-sm text-white font-medium break-all">{info.info_value}</p>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-
-                    {/* Address - Full Width di bawah */}
-                    {portfolioData.personalInfo
-                      .filter(info => info.info_key === 'address')
-                      .map((info) => (
+                    {/* Stats Cards - Moved from Home (Outside PixelCard) */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                      {portfolioData.homeStats.map((stat) => (
                         <div
-                          key={info.id}
-                          className="flex items-start gap-2 p-2 sm:p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300"
+                          key={stat.id}
+                          className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 text-center hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
                         >
-                          <span className="text-base sm:text-lg">{info.info_icon}</span>
-                          <div>
-                            <p className="text-[9px] sm:text-[10px] text-white/60">{info.info_label}</p>
-                            <p className="text-xs sm:text-sm text-white font-medium break-all">{info.info_value}</p>
+                          <div
+                            className="text-base sm:text-lg md:text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent leading-tight"
+                            style={{
+                              backgroundImage: `linear-gradient(to right, ${stat.gradient_from}, ${stat.gradient_to})`
+                            }}
+                          >
+                            {stat.stat_value}
                           </div>
+                          <div className="text-[10px] sm:text-xs text-white/60 mt-1 leading-tight">{stat.stat_label}</div>
                         </div>
                       ))}
+                    </div>
+
                   </div>
-                </PixelCard>
 
-              </div>
-
-              {/* Right Column - Profile Image - DYNAMIC! */}
-              <div className="lg:col-span-3 flex items-center justify-center order-1 lg:order-2">
-                <div className="relative w-full lg:max-w-full">
-                  <div className="relative overflow-hidden rounded-2xl border-2 border-white/10 shadow-2xl">
-                    <img
-                      src={portfolioData.aboutContent?.profile_photo_url || '/images/profile.jpg'}
-                      alt="Taji Jadda Giras Sentosa - Profile Photo"
-                      className="w-full h-auto object-cover"
-                      loading="lazy"
-                      width="600"
-                      height="600"
+                  {/* Right Column - 3D Lanyard */}
+                  <div className="lg:col-span-4 flex items-center justify-center order-1 lg:order-2 h-[450px] sm:h-[500px] lg:h-[550px] xl:h-[600px] relative overflow-visible">
+                    <Lanyard
+                      position={[0, 0, 20]}
+                      gravity={[0, -40, 0]}
                     />
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   </div>
-                  {/* Glow Effect */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 rounded-2xl blur-2xl opacity-20 -z-10"></div>
+
                 </div>
+
               </div>
 
             </div>
-
           </div>
         </div>
       </div>
@@ -508,29 +473,33 @@ ${message}`;
           </div>
 
           {/* Skills Grid - DYNAMIC! */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
             {portfolioData.skills.map((skill) => (
               <div
                 key={skill.id}
-                className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border-2 rounded-lg p-2 sm:p-3 transition-all duration-300 hover:scale-105"
+                className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 transition-all duration-300 hover:scale-105 hover:border-opacity-100"
                 style={{
-                  borderColor: skill.border_color || 'rgba(255,255,255,0.3)'
+                  ['--skill-border-color' as any]: skill.border_color || 'rgba(255,255,255,0.3)'
                 }}
               >
+                {/* Subtle border glow on hover */}
+                <div
+                  className="absolute -inset-[1px] rounded-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300 -z-10"
+                  style={{
+                    background: `linear-gradient(135deg, ${skill.gradient_from}, ${skill.gradient_to})`,
+                    filter: 'blur(4px)'
+                  }}
+                ></div>
+
                 <div
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
                     backgroundImage: `linear-gradient(135deg, ${skill.gradient_from}10, ${skill.gradient_to}10)`
                   }}
                 ></div>
-                <div
-                  className="absolute -inset-0.5 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                  style={{
-                    backgroundImage: `linear-gradient(to right, ${skill.gradient_from}, ${skill.gradient_to})`
-                  }}
-                ></div>
-                <div className="relative flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-2xl sm:text-3xl transition-all duration-300 flex-shrink-0">
+
+                <div className="relative flex items-center gap-2 w-full">
+                  <div className="text-2xl sm:text-3xl transition-all duration-300 group-hover:scale-110 flex-shrink-0">
                     {skill.skill_icon}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -607,98 +576,24 @@ ${message}`;
             <div className="mt-3 sm:mt-4 w-20 sm:w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto rounded-full"></div>
           </div>
 
-          {/* Contact Content - 2 Columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 lg:items-center">
+          {/* Contact Content - Single Column */}
+          <div className="max-w-3xl mx-auto">
 
-            {/* Left Column - Contact Info */}
-            <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white">Hubungi Saya</h3>
-
-              {/* WhatsApp */}
-              <div className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 hover:border-green-500/50 transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="relative flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-2xl sm:text-3xl filter drop-shadow-[0_0_10px_rgba(34,197,94,0.7)] group-hover:drop-shadow-[0_0_20px_rgba(34,197,94,0.9)] transition-all duration-300 flex-shrink-0">
-                    📱
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">WhatsApp</h4>
-                    <p className="text-[9px] sm:text-[10px] text-white/60 truncate">081265098103</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 hover:border-blue-500/50 transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="relative flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-2xl sm:text-3xl filter drop-shadow-[0_0_10px_rgba(59,130,246,0.7)] group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.9)] transition-all duration-300 flex-shrink-0">
-                    📧
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">Email</h4>
-                    <p className="text-[9px] sm:text-[10px] text-white/60 truncate">tajijaddagirassntosa@gmail.com</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* TikTok */}
-              <div className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 hover:border-pink-500/50 transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-purple-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="relative flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-2xl sm:text-3xl filter drop-shadow-[0_0_10px_rgba(236,72,153,0.7)] group-hover:drop-shadow-[0_0_20px_rgba(236,72,153,0.9)] transition-all duration-300 flex-shrink-0">
-                    🎵
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">TikTok</h4>
-                    <p className="text-[9px] sm:text-[10px] text-white/60 truncate">@tajijddagrssntosa</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instagram */}
-              <div className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 hover:border-pink-500/50 transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-orange-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-orange-600 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="relative flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-2xl sm:text-3xl filter drop-shadow-[0_0_10px_rgba(236,72,153,0.7)] group-hover:drop-shadow-[0_0_20px_rgba(236,72,153,0.9)] transition-all duration-300 flex-shrink-0">
-                    📷
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">Instagram</h4>
-                    <p className="text-[9px] sm:text-[10px] text-white/60 truncate">@tajijaddagiras_</p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Column - Contact Form */}
+            {/* Contact Form */}
             <div className="relative">
-              {/* Form Container with Premium Glassmorphism */}
-              <div className="relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl">
+              {/* Form Container with Professional Clean Design */}
+              <div className="relative bg-[#0a0a0a]/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-8 shadow-2xl">
 
-                {/* Gradient Border Effect */}
-                <div className="absolute -inset-[1px] bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl -z-10 blur-sm"></div>
-
-                {/* Glow Effect */}
-                <div className="absolute -inset-[2px] bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 rounded-2xl -z-20 blur-xl opacity-50"></div>
+                {/* Subtle Top Highlight */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
                 {/* Form Header */}
-                <div className="mb-4 sm:mb-5">
-                  <div className="flex items-center gap-2 sm:gap-3 mb-2">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-xl flex items-center justify-center border border-cyan-500/30">
-                      <span className="text-xl sm:text-2xl">✉️</span>
-                    </div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                      Kirim Pesan Langsung
-                    </h3>
-                  </div>
-                  <p className="text-[10px] sm:text-xs text-white/60 ml-0 sm:ml-12">
-                    Hubungi saya untuk kolaborasi atau pertanyaan
+                <div className="mb-8">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                    Kirim Pesan Langsung
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Silakan isi form di bawah ini untuk berdiskusi tentang project Anda.
                   </p>
                 </div>
 
@@ -707,41 +602,36 @@ ${message}`;
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Nama Lengkap */}
                     <div className="group">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90 mb-2">
-                        <span className="text-base">👤</span>
-                        <span>Nama Lengkap</span>
+                      <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+                        Nama Lengkap
                       </label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Masukkan nama lengkap Anda"
-                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm sm:text-base placeholder:text-white/30 focus:border-cyan-500/60 focus:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 hover:border-white/20"
-                        />
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 transition-all duration-300 pointer-events-none"></div>
-                      </div>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="John Doe"
+                        className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm focus:border-white/20 focus:bg-white/[0.05] focus:outline-none transition-colors duration-300 placeholder:text-gray-600"
+                      />
                     </div>
 
                     {/* Kirim Via */}
                     <div className="group">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90 mb-2">
-                        <span className="text-base">📤</span>
-                        <span>Kirim Via</span>
+                      <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+                        Kirim Via
                       </label>
                       <div className="relative">
                         <select
                           name="sendVia"
                           value={formData.sendVia}
                           onChange={handleInputChange}
-                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm sm:text-base focus:border-cyan-500/60 focus:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 hover:border-white/20 appearance-none cursor-pointer"
+                          className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm focus:border-white/20 focus:bg-white/[0.05] focus:outline-none transition-colors duration-300 appearance-none cursor-pointer"
                         >
-                          <option value="whatsapp" className="bg-gray-900 py-2">📱 WhatsApp</option>
-                          <option value="email" className="bg-gray-900 py-2">📧 Email</option>
+                          <option value="whatsapp" className="bg-[#1a1a1a]">WhatsApp</option>
+                          <option value="email" className="bg-[#1a1a1a]">Email</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </div>
@@ -753,42 +643,37 @@ ${message}`;
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Email */}
                     <div className="group">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90 mb-2">
-                        <span className="text-base">📧</span>
-                        <span>Email</span>
+                      <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+                        Email
                       </label>
-                      <div className="relative">
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="contoh@email.com"
-                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm sm:text-base placeholder:text-white/30 focus:border-cyan-500/60 focus:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 hover:border-white/20"
-                        />
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 transition-all duration-300 pointer-events-none"></div>
-                      </div>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="john@example.com"
+                        className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm focus:border-white/20 focus:bg-white/[0.05] focus:outline-none transition-colors duration-300 placeholder:text-gray-600"
+                      />
                     </div>
 
                     {/* Subject */}
                     <div className="group">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90 mb-2">
-                        <span className="text-base">📋</span>
-                        <span>Subject</span>
+                      <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+                        Subject
                       </label>
                       <div className="relative">
                         <select
                           name="subject"
                           value={formData.subject}
                           onChange={handleInputChange}
-                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm sm:text-base focus:border-cyan-500/60 focus:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 hover:border-white/20 appearance-none cursor-pointer"
+                          className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm focus:border-white/20 focus:bg-white/[0.05] focus:outline-none transition-colors duration-300 appearance-none cursor-pointer"
                         >
-                          <option value="website" className="bg-gray-900 py-2">🌐 Pembuatan Website</option>
-                          <option value="aplikasi" className="bg-gray-900 py-2">💻 Pembuatan Aplikasi Website</option>
-                          <option value="proposal" className="bg-gray-900 py-2">📄 Proposal/Skripsi</option>
+                          <option value="website" className="bg-[#1a1a1a]">Pembuatan Website</option>
+                          <option value="aplikasi" className="bg-[#1a1a1a]">Pembuatan Aplikasi Website</option>
+                          <option value="proposal" className="bg-[#1a1a1a]">Proposal/Skripsi</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </div>
@@ -798,44 +683,29 @@ ${message}`;
 
                   {/* Pesan - Full Width */}
                   <div className="group">
-                    <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90 mb-2">
-                      <span className="text-base">💬</span>
-                      <span>Pesan</span>
+                    <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+                      Pesan
                     </label>
-                    <div className="relative">
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        rows={4}
-                        placeholder="Tulis pesan Anda di sini..."
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm sm:text-base placeholder:text-white/30 focus:border-cyan-500/60 focus:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 hover:border-white/20 resize-none"
-                      ></textarea>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 transition-all duration-300 pointer-events-none"></div>
-                    </div>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      rows={4}
+                      placeholder="Ceritakan detail project Anda..."
+                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.05] rounded-lg text-white text-sm focus:border-white/20 focus:bg-white/[0.05] focus:outline-none transition-colors duration-300 placeholder:text-gray-600 resize-none"
+                    ></textarea>
                   </div>
 
-                  {/* Kirim Button - Premium Design - Full Width */}
+                  {/* Kirim Button - Professional Design */}
                   <button
                     onClick={handleSubmit}
-                    className="group relative w-full py-3 sm:py-3.5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-sm sm:text-base rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/50 active:scale-[0.98] overflow-hidden"
+                    className="w-full py-3.5 bg-white text-black font-semibold text-sm rounded-lg transition-all duration-300 hover:bg-gray-200 active:scale-[0.98] mt-2"
                   >
-                    {/* Animated Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-
-                    {/* Button Content */}
-                    <span className="relative flex items-center justify-center gap-2 sm:gap-3">
-                      <span>Kirim Pesan</span>
-                      <span className="text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">📨</span>
-                    </span>
-
-                    {/* Glow Effect */}
-                    <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-300 -z-10"></div>
+                    Kirim Pesan
                   </button>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -861,13 +731,7 @@ ${message}`;
               {/* Logo & Brand Name */}
               <div className="group">
                 <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-all duration-300">
-                      <span className="text-white text-lg sm:text-xl font-bold">TJ</span>
-                    </div>
-                    {/* Glow Ring */}
-                    <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500/40 to-blue-600/40 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                  </div>
+                  {/* Logo Removed */}
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                       Taji Jadda Giras Sentosa
@@ -1033,104 +897,106 @@ ${message}`;
       </footer>
 
       {/* CV Download Modal */}
-      {showCVModal && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
-          onClick={() => {
-            setShowCVModal(false);
-            setSelectedFormat(null);
-          }}
-        >
+      {
+        showCVModal && (
           <div
-            className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-6 max-w-sm w-full shadow-2xl animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+            onClick={() => {
+              setShowCVModal(false);
+              setSelectedFormat(null);
+            }}
           >
-            {/* Close Button */}
-            <button
-              onClick={() => {
-                setShowCVModal(false);
-                setSelectedFormat(null);
-              }}
-              className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300"
+            <div
+              className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-6 max-w-sm w-full shadow-2xl animate-fade-in-up"
+              onClick={(e) => e.stopPropagation()}
             >
-              <span className="text-white text-lg leading-none">×</span>
-            </button>
+              {/* Close Button */}
+              <button
+                onClick={() => {
+                  setShowCVModal(false);
+                  setSelectedFormat(null);
+                }}
+                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300"
+              >
+                <span className="text-white text-lg leading-none">×</span>
+              </button>
 
-            {/* Modal Header */}
-            <div className="text-center mb-5">
-              <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-full flex items-center justify-center border border-cyan-500/30">
-                <span className="text-2xl">📄</span>
+              {/* Modal Header */}
+              <div className="text-center mb-5">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-full flex items-center justify-center border border-cyan-500/30">
+                  <span className="text-2xl">📄</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-1">
+                  Unduh CV Saya
+                </h3>
+                <p className="text-xs text-white/60">
+                  Pilih format file yang Anda inginkan
+                </p>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-1">
-                Unduh CV Saya
-              </h3>
-              <p className="text-xs text-white/60">
-                Pilih format file yang Anda inginkan
-              </p>
-            </div>
 
-            {/* Download Options */}
-            <div className="space-y-2 mb-5">
-              {/* PDF Option */}
+              {/* Download Options */}
+              <div className="space-y-2 mb-5">
+                {/* PDF Option */}
+                <button
+                  onClick={() => setSelectedFormat('pdf')}
+                  className={`w-full p-3 rounded-lg border-2 transition-all duration-300 ${selectedFormat === 'pdf'
+                    ? 'bg-red-500/20 border-red-500/60 shadow-lg shadow-red-500/20'
+                    : 'bg-white/5 border-white/10 hover:border-red-500/30'
+                    }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">📕</span>
+                      <div className="text-left">
+                        <p className="text-sm font-semibold text-white">PDF</p>
+                        <p className="text-[10px] text-white/60">Portable Document Format</p>
+                      </div>
+                    </div>
+                    {selectedFormat === 'pdf' && (
+                      <span className="text-green-400 text-lg">✓</span>
+                    )}
+                  </div>
+                </button>
+
+                {/* Image Option */}
+                <button
+                  onClick={() => setSelectedFormat('image')}
+                  className={`w-full p-3 rounded-lg border-2 transition-all duration-300 ${selectedFormat === 'image'
+                    ? 'bg-blue-500/20 border-blue-500/60 shadow-lg shadow-blue-500/20'
+                    : 'bg-white/5 border-white/10 hover:border-blue-500/30'
+                    }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🖼️</span>
+                      <div className="text-left">
+                        <p className="text-sm font-semibold text-white">Image (JPG)</p>
+                        <p className="text-[10px] text-white/60">JPEG Image Format</p>
+                      </div>
+                    </div>
+                    {selectedFormat === 'image' && (
+                      <span className="text-green-400 text-lg">✓</span>
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              {/* Download Button */}
               <button
-                onClick={() => setSelectedFormat('pdf')}
-                className={`w-full p-3 rounded-lg border-2 transition-all duration-300 ${selectedFormat === 'pdf'
-                  ? 'bg-red-500/20 border-red-500/60 shadow-lg shadow-red-500/20'
-                  : 'bg-white/5 border-white/10 hover:border-red-500/30'
+                onClick={handleDownloadCV}
+                disabled={!selectedFormat}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300 ${selectedFormat
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105'
+                  : 'bg-white/5 text-white/40 cursor-not-allowed'
                   }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">📕</span>
-                    <div className="text-left">
-                      <p className="text-sm font-semibold text-white">PDF</p>
-                      <p className="text-[10px] text-white/60">Portable Document Format</p>
-                    </div>
-                  </div>
-                  {selectedFormat === 'pdf' && (
-                    <span className="text-green-400 text-lg">✓</span>
-                  )}
-                </div>
-              </button>
-
-              {/* Image Option */}
-              <button
-                onClick={() => setSelectedFormat('image')}
-                className={`w-full p-3 rounded-lg border-2 transition-all duration-300 ${selectedFormat === 'image'
-                  ? 'bg-blue-500/20 border-blue-500/60 shadow-lg shadow-blue-500/20'
-                  : 'bg-white/5 border-white/10 hover:border-blue-500/30'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🖼️</span>
-                    <div className="text-left">
-                      <p className="text-sm font-semibold text-white">Image (JPG)</p>
-                      <p className="text-[10px] text-white/60">JPEG Image Format</p>
-                    </div>
-                  </div>
-                  {selectedFormat === 'image' && (
-                    <span className="text-green-400 text-lg">✓</span>
-                  )}
-                </div>
+                {selectedFormat ? '📥 Download CV' : 'Pilih Format Terlebih Dahulu'}
               </button>
             </div>
-
-            {/* Download Button */}
-            <button
-              onClick={handleDownloadCV}
-              disabled={!selectedFormat}
-              className={`w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300 ${selectedFormat
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105'
-                : 'bg-white/5 text-white/40 cursor-not-allowed'
-                }`}
-            >
-              {selectedFormat ? '📥 Download CV' : 'Pilih Format Terlebih Dahulu'}
-            </button>
           </div>
-        </div>
-      )}
+        )
+      }
 
-    </div>
+    </div >
   );
 }

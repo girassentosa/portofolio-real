@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { HomeContent, HomeStat, ProfileCard } from '@/types/database';
+import { HomeContent, ProfileCard } from '@/types/database';
 import Toast from '@/components/Toast';
 
 export default function AdminHome() {
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
-  const [stats, setStats] = useState<HomeStat[]>([]);
   const [profileCard, setProfileCard] = useState<ProfileCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -19,14 +18,12 @@ export default function AdminHome() {
 
   const fetchAllData = async () => {
     try {
-      const [contentRes, statsRes, profileRes] = await Promise.all([
+      const [contentRes, profileRes] = await Promise.all([
         supabase.from('home_content').select('*').single(),
-        supabase.from('home_stats').select('*').order('display_order'),
         supabase.from('profile_card').select('*').single(),
       ]);
 
       if (contentRes.data) setHomeContent(contentRes.data);
-      if (statsRes.data) setStats(statsRes.data);
       if (profileRes.data) setProfileCard(profileRes.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -60,35 +57,6 @@ export default function AdminHome() {
     }
   };
 
-  const saveAllStats = async () => {
-    setIsSaving(true);
-
-    try {
-      // Update all stats
-      const updates = stats.map((stat) =>
-        supabase
-          .from('home_stats')
-          .update({
-            stat_value: stat.stat_value,
-            stat_label: stat.stat_label,
-            icon: stat.icon,
-            gradient_from: stat.gradient_from,
-            gradient_to: stat.gradient_to,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', stat.id)
-      );
-
-      await Promise.all(updates);
-      showSuccess('Semua stats berhasil disimpan!');
-    } catch (error) {
-      console.error('Error saving stats:', error);
-      alert('Gagal menyimpan stats');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   const saveProfileCard = async () => {
     if (!profileCard) return;
     setIsSaving(true);
@@ -97,8 +65,7 @@ export default function AdminHome() {
       const { error } = await supabase
         .from('profile_card')
         .update({
-          name: profileCard.name,
-          title: profileCard.title,
+          // name and title removed from update
           handle: profileCard.handle,
           status: profileCard.status,
           contact_text: profileCard.contact_text,
@@ -134,8 +101,8 @@ export default function AdminHome() {
     <div className="space-y-6">
       {/* Toast Notification */}
       {successMessage && (
-        <Toast 
-          message={successMessage} 
+        <Toast
+          message={successMessage}
           onClose={() => setSuccessMessage('')}
         />
       )}
@@ -203,108 +170,6 @@ export default function AdminHome() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-          <span>📊</span>
-          <span>Stats Cards</span>
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {stats.map((stat) => (
-            <div key={stat.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Icon</label>
-                    <input
-                      type="text"
-                      value={stat.icon}
-                      onChange={(e) => {
-                        const updated = stats.map((s) =>
-                          s.id === stat.id ? { ...s, icon: e.target.value } : s
-                        );
-                        setStats(updated);
-                      }}
-                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Value</label>
-                    <input
-                      type="text"
-                      value={stat.stat_value}
-                      onChange={(e) => {
-                        const updated = stats.map((s) =>
-                          s.id === stat.id ? { ...s, stat_value: e.target.value } : s
-                        );
-                        setStats(updated);
-                      }}
-                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Label</label>
-                  <input
-                    type="text"
-                    value={stat.stat_label}
-                    onChange={(e) => {
-                      const updated = stats.map((s) =>
-                        s.id === stat.id ? { ...s, stat_label: e.target.value } : s
-                      );
-                      setStats(updated);
-                    }}
-                    className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Gradient From</label>
-                    <input
-                      type="text"
-                      value={stat.gradient_from}
-                      onChange={(e) => {
-                        const updated = stats.map((s) =>
-                          s.id === stat.id ? { ...s, gradient_from: e.target.value } : s
-                        );
-                        setStats(updated);
-                      }}
-                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">Gradient To</label>
-                    <input
-                      type="text"
-                      value={stat.gradient_to}
-                      onChange={(e) => {
-                        const updated = stats.map((s) =>
-                          s.id === stat.id ? { ...s, gradient_to: e.target.value } : s
-                        );
-                        setStats(updated);
-                      }}
-                      className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded text-white text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Save All Stats Button */}
-        <button
-          onClick={saveAllStats}
-          disabled={isSaving}
-          className="mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-lg transition-all disabled:opacity-50"
-        >
-          {isSaving ? 'Menyimpan...' : 'Simpan Semua Stats'}
-        </button>
-      </div>
-
       {/* Profile Card Section */}
       <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
         <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
@@ -314,29 +179,7 @@ export default function AdminHome() {
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Nama</label>
-              <input
-                type="text"
-                value={profileCard?.name || ''}
-                onChange={(e) =>
-                  setProfileCard(profileCard ? { ...profileCard, name: e.target.value } : null)
-                }
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Title/Posisi</label>
-              <input
-                type="text"
-                value={profileCard?.title || ''}
-                onChange={(e) =>
-                  setProfileCard(profileCard ? { ...profileCard, title: e.target.value } : null)
-                }
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-              />
-            </div>
+            {/* Name and Title inputs removed as per request */}
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Handle (Username)</label>

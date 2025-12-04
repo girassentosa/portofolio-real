@@ -23,13 +23,13 @@ interface ChromaGridProps {
   ease?: string;
 }
 
-const ChromaGrid: React.FC<ChromaGridProps> = ({ 
-  items, 
-  className = '', 
-  radius = 300, 
-  damping = 0.45, 
-  fadeOut = 0.6, 
-  ease = 'power3.out' 
+const ChromaGrid: React.FC<ChromaGridProps> = ({
+  items,
+  className = '',
+  radius = 300,
+  damping = 0.45,
+  fadeOut = 0.6,
+  ease = 'power3.out'
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const fadeRef = useRef<HTMLDivElement>(null);
@@ -156,7 +156,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
       ref={rootRef}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`relative w-full h-full flex flex-wrap justify-center items-start gap-3 sm:gap-4 md:gap-5 ${className}`}
+      className={`relative w-full h-full flex flex-wrap justify-center items-start gap-3 sm:gap-4 ${className}`}
       style={{
         ['--r' as string]: `${radius}px`,
         ['--x' as string]: '50%',
@@ -168,7 +168,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
           key={i}
           onMouseMove={handleCardMove}
           onClick={() => handleCardClick(c.url)}
-          className="group relative flex flex-col w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.833rem)] h-[400px] sm:h-[420px] md:h-[450px] lg:h-[480px] rounded-[18px] sm:rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
+          className="group relative flex flex-col w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)] h-[280px] sm:h-[300px] rounded-[16px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
           style={{
             ['--card-border' as string]: c.borderColor || 'transparent',
             background: c.gradient,
@@ -182,14 +182,14 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
                 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
             }}
           />
-          <div className="relative z-10 flex-1 p-[10px] sm:p-[12px] md:p-[14px] box-border min-h-0">
-            <img src={c.image} alt={c.title} loading="lazy" width="400" height="300" className="w-full h-full object-cover rounded-[10px] sm:rounded-[12px]" />
+          <div className="relative z-10 flex-1 p-[8px] sm:p-[10px] box-border min-h-0">
+            <img src={c.image} alt={c.title} loading="lazy" width="400" height="300" className="w-full h-full object-cover rounded-[8px] sm:rounded-[10px]" />
           </div>
-          <footer className="relative z-10 p-3 sm:p-4 md:p-5 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 sm:gap-x-3 gap-y-1">
-            <h3 className="m-0 text-sm sm:text-base md:text-lg font-semibold">{c.title}</h3>
-            {c.handle && <span className="text-xs sm:text-sm opacity-80 text-right">{c.handle}</span>}
-            <p className="m-0 text-xs sm:text-sm opacity-85">{c.subtitle}</p>
-            {c.location && <span className="text-xs sm:text-sm opacity-85 text-right">{c.location}</span>}
+          <footer className="relative z-10 p-2 sm:p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 gap-y-0.5">
+            <h3 className="m-0 text-xs sm:text-sm font-semibold truncate">{c.title}</h3>
+            {c.handle && <span className="text-[10px] sm:text-xs opacity-80 text-right truncate">{c.handle}</span>}
+            <p className="m-0 text-[10px] sm:text-xs opacity-85 truncate">{c.subtitle}</p>
+            {c.location && <span className="text-[10px] sm:text-xs opacity-85 text-right truncate">{c.location}</span>}
           </footer>
         </article>
       ))}
