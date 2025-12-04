@@ -120,7 +120,7 @@ const TextType: React.FC<TextTypeProps> = ({
 
           setCurrentTextIndex(prev => (prev + 1) % textArray.length);
           setCurrentCharIndex(0);
-          timeout = setTimeout(() => {}, pauseDuration);
+          timeout = setTimeout(() => { }, pauseDuration);
         } else {
           timeout = setTimeout(() => {
             setDisplayedText(prev => prev.slice(0, -1));
@@ -180,14 +180,11 @@ const TextType: React.FC<TextTypeProps> = ({
       ...props
     },
     <>
-      <span className="inline align-baseline" style={{ color: getCurrentTextColor() || 'inherit' }}>
-        {displayedText}
-      </span>
+      <span className="inline align-baseline" style={{ color: getCurrentTextColor() || 'inherit' }}>{displayedText}</span>
       {showCursor && (
         <span
           ref={cursorRef}
-          className={`ml-1 inline-block align-baseline opacity-100 ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
-          style={{ width: '0.6em', textAlign: 'center' }}
+          className={`inline-block align-baseline opacity-100 ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
         >
           {cursorCharacter}
         </span>

@@ -46,7 +46,7 @@ export default function Navbar() {
       // Responsive offset untuk semua devices
       const width = window.innerWidth;
       let headerOffset;
-      
+
       if (width < 640) {
         headerOffset = 55; // Mobile (< 640px)
       } else if (width < 768) {
@@ -56,7 +56,7 @@ export default function Navbar() {
       } else {
         headerOffset = 100; // Desktop (≥ 1024px)
       }
-      
+
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -68,40 +68,23 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Backdrop blur dengan gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-black/90 backdrop-blur-md border-b border-cyan-500/20"></div>
-      
-      <nav className="relative container mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          
-          {/* Logo dengan glow effect */}
-          <Link href="/" className="group shrink-0">
-            <div className="relative">
-              <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent transition-all duration-300 group-hover:scale-110 inline-block">
-                Portofolio
-              </span>
-              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-purple-600/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+      <nav className="relative container mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 pointer-events-auto">
+        <div className="flex items-center justify-center gap-2 sm:gap-4">
 
-          {/* Navigation Menu dengan pill style */}
-          <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 bg-white/5 backdrop-blur-sm rounded-full px-1.5 sm:px-2 md:px-3 py-1.5 sm:py-2 border border-white/10">
+          {/* Navigation Menu - Only Buttons */}
+          <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-black/20 backdrop-blur-md border border-white/10 rounded-full shadow-lg shadow-black/10">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleClick(e, item.href)}
-                className={`relative px-2 sm:px-3 md:px-5 py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-xs md:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap ${
-                  activeSection === item.href
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
-                }`}
+                className={`relative px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base font-medium rounded-full transition-all duration-300 whitespace-nowrap ${activeSection === item.href
+                    ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-50 border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
+                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                  }`}
               >
                 {item.label}
-                {activeSection === item.href && (
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 blur-md opacity-50 animate-pulse"></div>
-                )}
               </Link>
             ))}
           </div>

@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  
+
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -12,18 +12,19 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
-  
+
   // Compiler optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  
+
   // Turbopack config (Next.js 16 default)
   turbopack: {
     // Turbopack handles optimizations automatically
     // Code splitting, tree shaking, and module bundling are built-in
+    root: __dirname,
   },
-  
+
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
