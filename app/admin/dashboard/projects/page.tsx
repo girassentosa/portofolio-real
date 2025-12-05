@@ -21,6 +21,9 @@ export default function AdminProjects() {
     project_location: '',
     project_image_url: '/images/preview-home.png',
     project_url: '',
+    demo_url: '',
+    project_description: '',
+    gallery_images: [],
     border_color: '#3B82F6',
     gradient: 'linear-gradient(145deg, #3B82F6, #000)',
     display_order: 0,
@@ -95,6 +98,9 @@ export default function AdminProjects() {
           project_location: project.project_location,
           project_image_url: project.project_image_url,
           project_url: project.project_url,
+          demo_url: project.demo_url,
+          project_description: project.project_description,
+          gallery_images: project.gallery_images,
           border_color: project.border_color,
           gradient: project.gradient,
           display_order: project.display_order,
@@ -305,6 +311,62 @@ export default function AdminProjects() {
                   />
                 </div>
 
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-gray-300 mb-2">Project Description</label>
+                  <textarea
+                    value={editingProject.project_description || ''}
+                    onChange={(e) =>
+                      setEditingProject({ ...editingProject, project_description: e.target.value })
+                    }
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white h-32"
+                    placeholder="Deskripsi detail project..."
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-gray-300 mb-2">Gallery Images (Satu URL per baris)</label>
+                  <textarea
+                    value={editingProject.gallery_images?.join('\n') || ''}
+                    onChange={(e) =>
+                      setEditingProject({
+                        ...editingProject,
+                        gallery_images: e.target.value.split('\n').filter(url => url.trim() !== '')
+                      })
+                    }
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white h-32 font-mono text-sm"
+                    placeholder="/images/gallery1.jpg&#10;/images/gallery2.jpg"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">Live Demo URL</label>
+                      <input
+                        type="text"
+                        value={editingProject.demo_url || ''}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, demo_url: e.target.value })
+                        }
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                        placeholder="https://demo.vercel.app"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">Project URL (Repo)</label>
+                      <input
+                        type="text"
+                        value={editingProject.project_url || ''}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, project_url: e.target.value })
+                        }
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                        placeholder="https://github.com/..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Display Order</label>
                   <input
@@ -349,18 +411,7 @@ export default function AdminProjects() {
                   )}
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm text-gray-300 mb-2">Project URL (Optional)</label>
-                  <input
-                    type="text"
-                    value={editingProject.project_url || ''}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, project_url: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="https://github.com/..."
-                  />
-                </div>
+
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>
@@ -524,6 +575,56 @@ export default function AdminProjects() {
                   />
                 </div>
 
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-gray-300 mb-2">Project Description</label>
+                  <textarea
+                    value={newProject.project_description || ''}
+                    onChange={(e) => setNewProject({ ...newProject, project_description: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white h-32"
+                    placeholder="Deskripsi detail project..."
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-gray-300 mb-2">Gallery Images (Satu URL per baris)</label>
+                  <textarea
+                    value={newProject.gallery_images?.join('\n') || ''}
+                    onChange={(e) =>
+                      setNewProject({
+                        ...newProject,
+                        gallery_images: e.target.value.split('\n').filter(url => url.trim() !== '')
+                      })
+                    }
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white h-32 font-mono text-sm"
+                    placeholder="/images/gallery1.jpg&#10;/images/gallery2.jpg"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">Live Demo URL</label>
+                      <input
+                        type="text"
+                        value={newProject.demo_url || ''}
+                        onChange={(e) => setNewProject({ ...newProject, demo_url: e.target.value })}
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                        placeholder="https://demo.vercel.app"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">Project URL (Repo)</label>
+                      <input
+                        type="text"
+                        value={newProject.project_url || ''}
+                        onChange={(e) => setNewProject({ ...newProject, project_url: e.target.value })}
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                        placeholder="https://github.com/..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Display Order</label>
                   <input
@@ -566,16 +667,7 @@ export default function AdminProjects() {
                   )}
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm text-gray-300 mb-2">Project URL (Optional)</label>
-                  <input
-                    type="text"
-                    value={newProject.project_url || ''}
-                    onChange={(e) => setNewProject({ ...newProject, project_url: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="https://github.com/..."
-                  />
-                </div>
+
 
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">Border Color</label>

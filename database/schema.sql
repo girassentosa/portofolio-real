@@ -179,6 +179,9 @@ CREATE TABLE projects (
   project_location VARCHAR(100),
   project_image_url TEXT NOT NULL,
   project_url TEXT,
+  demo_url TEXT,
+  project_description TEXT,
+  gallery_images TEXT[],
   border_color VARCHAR(50) NOT NULL DEFAULT '#3B82F6',
   gradient TEXT NOT NULL DEFAULT 'linear-gradient(145deg, #3B82F6, #000)',
   display_order INTEGER DEFAULT 0,
@@ -194,7 +197,10 @@ COMMENT ON COLUMN projects.project_title IS 'Project title (main heading)';
 COMMENT ON COLUMN projects.project_subtitle IS 'Tech stack atau deskripsi singkat';
 COMMENT ON COLUMN projects.project_handle IS 'Category handle (e.g., "Web Development")';
 COMMENT ON COLUMN projects.project_image_url IS 'Preview image URL';
-COMMENT ON COLUMN projects.project_url IS 'Link ke GitHub/demo (optional)';
+COMMENT ON COLUMN projects.project_url IS 'Link ke Repository / GitHub';
+COMMENT ON COLUMN projects.demo_url IS 'Link ke Live Demo / Preview';
+COMMENT ON COLUMN projects.project_description IS 'Deskripsi detail project untuk modal';
+COMMENT ON COLUMN projects.gallery_images IS 'Array of image URLs untuk gallery slider';
 COMMENT ON COLUMN projects.gradient IS 'CSS gradient untuk card background';
 
 
@@ -376,13 +382,85 @@ INSERT INTO skills (skill_name, skill_category, skill_icon, gradient_from, gradi
 -- DEFAULT DATA: Projects Section
 -- =====================================================
 
-INSERT INTO projects (project_title, project_subtitle, project_handle, project_image_url, project_url, border_color, gradient, display_order) VALUES
-  ('Portfolio Website', 'Next.js, Tailwind CSS, GSAP', 'Web Development', '/images/preview-home.png', 'https://github.com/girassentosa', '#3B82F6', 'linear-gradient(145deg, #3B82F6, #000)', 1),
-  ('IoT Smart Home', 'Node.js, Firebase, Arduino', 'IoT Project', '/images/preview-projects.png', 'https://github.com/girassentosa', '#10B981', 'linear-gradient(180deg, #10B981, #000)', 2),
-  ('E-Commerce Platform', 'React, Supabase, Stripe', 'Full Stack', '/images/preview-about.png', 'https://github.com/girassentosa', '#F59E0B', 'linear-gradient(165deg, #F59E0B, #000)', 3),
-  ('Weather Station IoT', 'ESP32, MQTT, Dashboard', 'IoT Project', '/images/preview-skills.png', 'https://github.com/girassentosa', '#EF4444', 'linear-gradient(195deg, #EF4444, #000)', 4),
-  ('Task Management App', 'Next.js, TypeScript, Vercel', 'Web App', '/images/preview-mobile.png', 'https://github.com/girassentosa', '#8B5CF6', 'linear-gradient(225deg, #8B5CF6, #000)', 5),
-  ('Smart Parking System', 'IoT, MySQL, Real-time', 'IoT Project', '/images/preview-admin.png', 'https://github.com/girassentosa', '#06B6D4', 'linear-gradient(135deg, #06B6D4, #000)', 6);
+INSERT INTO projects (project_title, project_subtitle, project_handle, project_image_url, project_url, demo_url, project_description, gallery_images, border_color, gradient, display_order) VALUES
+  (
+    'Portfolio Website', 
+    'Next.js, Tailwind CSS, GSAP', 
+    'Web Development', 
+    '/images/preview-home.png', 
+    'https://github.com/girassentosa/portfolio', 
+    'https://girassentosa.com',
+    'Website portfolio pribadi yang dibangun dengan Next.js App Router dan Tailwind CSS. Menggunakan animasi GSAP dan Framer Motion untuk pengalaman pengguna yang interaktif dan modern. Fitur termasuk 3D Lanyard, Chroma Grid, dan sistem konten berbasis database.',
+    ARRAY['/images/preview-home.png', '/images/preview-about.png', '/images/preview-skills.png'],
+    '#3B82F6', 
+    'linear-gradient(145deg, #3B82F6, #000)', 
+    1
+  ),
+  (
+    'IoT Smart Home', 
+    'Node.js, Firebase, Arduino', 
+    'IoT Project', 
+    '/images/preview-projects.png', 
+    'https://github.com/girassentosa/iot-home', 
+    'https://iot-home-demo.vercel.app',
+    'Sistem kontrol rumah pintar berbasis IoT yang memungkinkan pengguna mengontrol lampu, kipas, dan pintu melalui aplikasi web. Menggunakan ESP8266 dan Firebase Realtime Database untuk komunikasi data yang cepat dan reliable.',
+    ARRAY['/images/preview-projects.png', '/images/project1.jpeg', '/images/project2.jpeg'],
+    '#10B981', 
+    'linear-gradient(180deg, #10B981, #000)', 
+    2
+  ),
+  (
+    'E-Commerce Platform', 
+    'React, Supabase, Stripe', 
+    'Full Stack', 
+    '/images/preview-about.png', 
+    'https://github.com/girassentosa/ecommerce', 
+    'https://ecommerce-demo.vercel.app',
+    'Platform e-commerce lengkap dengan fitur keranjang belanja, checkout payment gateway menggunakan Stripe, dan manajemen produk untuk admin. Dibangun dengan fokus pada performa dan skalabilitas.',
+    ARRAY['/images/preview-about.png', '/images/project3.jpeg', '/images/project4.jpeg'],
+    '#F59E0B', 
+    'linear-gradient(165deg, #F59E0B, #000)', 
+    3
+  ),
+  (
+    'Weather Station IoT', 
+    'ESP32, MQTT, Dashboard', 
+    'IoT Project', 
+    '/images/preview-skills.png', 
+    'https://github.com/girassentosa/weather-station', 
+    'https://weather-station-demo.vercel.app',
+    'Stasiun cuaca mandiri menggunakan ESP32 yang mengirimkan data suhu, kelembaban, dan tekanan udara ke dashboard monitoring via MQTT. Data ditampilkan dalam bentuk grafik real-time.',
+    ARRAY['/images/preview-skills.png', '/images/project5.jpeg', '/images/project6.png'],
+    '#EF4444', 
+    'linear-gradient(195deg, #EF4444, #000)', 
+    4
+  ),
+  (
+    'Task Management App', 
+    'Next.js, TypeScript, Vercel', 
+    'Web App', 
+    '/images/preview-mobile.png', 
+    'https://github.com/girassentosa/task-manager', 
+    'https://task-manager-demo.vercel.app',
+    'Aplikasi manajemen tugas sederhana namun powerful untuk produktivitas tim. Mendukung fitur kolaborasi, drag-and-drop kanban board, dan notifikasi deadline.',
+    ARRAY['/images/preview-mobile.png', '/images/project.jpeg', '/images/project1.jpeg'],
+    '#8B5CF6', 
+    'linear-gradient(225deg, #8B5CF6, #000)', 
+    5
+  ),
+  (
+    'Smart Parking System', 
+    'IoT, MySQL, Real-time', 
+    'IoT Project', 
+    '/images/preview-admin.png', 
+    'https://github.com/girassentosa/smart-parking', 
+    'https://smart-parking-demo.vercel.app',
+    'Sistem parkir cerdas yang mendeteksi ketersediaan slot parkir menggunakan sensor ultrasonik dan menampilkannya pada display LED dan aplikasi mobile.',
+    ARRAY['/images/preview-admin.png', '/images/project2.jpeg', '/images/project3.jpeg'],
+    '#06B6D4', 
+    'linear-gradient(135deg, #06B6D4, #000)', 
+    6
+  );
 
 
 -- =====================================================
