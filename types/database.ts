@@ -33,11 +33,8 @@ export interface HomeStat {
 
 export interface ProfileCard {
   id: number;
-  name: string;
-  title: string;
   handle: string;
   status: string;
-  contact_text: string;
   avatar_url: string;
   mini_avatar_url: string;
   created_at: string;

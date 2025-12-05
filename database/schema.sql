@@ -11,24 +11,9 @@
 
 DROP POLICY IF EXISTS "Public read access for home_content" ON home_content;
 DROP POLICY IF EXISTS "Allow all operations for home_content" ON home_content;
-DROP POLICY IF EXISTS "Public read access for home_stats" ON home_stats;
-DROP POLICY IF EXISTS "Allow all operations for home_stats" ON home_stats;
-DROP POLICY IF EXISTS "Public read access for profile_card" ON profile_card;
-DROP POLICY IF EXISTS "Allow all operations for profile_card" ON profile_card;
-DROP POLICY IF EXISTS "Public read access for about_content" ON about_content;
-DROP POLICY IF EXISTS "Allow all operations for about_content" ON about_content;
-DROP POLICY IF EXISTS "Public read access for personal_info" ON personal_info;
-DROP POLICY IF EXISTS "Allow all operations for personal_info" ON personal_info;
-DROP POLICY IF EXISTS "Public read access for skills" ON skills;
-DROP POLICY IF EXISTS "Allow all operations for skills" ON skills;
-DROP POLICY IF EXISTS "Public read access for projects" ON projects;
-DROP POLICY IF EXISTS "Allow all operations for projects" ON projects;
-DROP POLICY IF EXISTS "Public read access for admin_users" ON admin_users;
-DROP POLICY IF EXISTS "Allow all operations for admin_users" ON admin_users;
 
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
-DROP TABLE IF EXISTS personal_info CASCADE;
 DROP TABLE IF EXISTS about_content CASCADE;
 DROP TABLE IF EXISTS profile_card CASCADE;
 DROP TABLE IF EXISTS home_stats CASCADE;
@@ -111,11 +96,8 @@ COMMENT ON COLUMN home_stats.display_order IS 'Order untuk sorting (1, 2, 3, 4)'
 
 CREATE TABLE profile_card (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  title VARCHAR(100) NOT NULL,
   handle VARCHAR(100) NOT NULL,
   status VARCHAR(50) NOT NULL,
-  contact_text VARCHAR(50) NOT NULL,
   avatar_url TEXT NOT NULL,
   mini_avatar_url TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -153,27 +135,6 @@ COMMENT ON COLUMN about_content.lanyard_card_file IS 'Nama file 3D card untuk la
 COMMENT ON COLUMN about_content.lanyard_texture_file IS 'Nama file texture untuk lanyard (e.g., lanyard.png, lanyard1.png)';
 
 
--- =====================================================
--- TABLE: personal_info
--- Purpose: Personal information items (email, phone, etc)
--- =====================================================
-
-CREATE TABLE personal_info (
-  id SERIAL PRIMARY KEY,
-  info_key VARCHAR(50) UNIQUE NOT NULL,
-  info_label VARCHAR(100) NOT NULL,
-  info_value TEXT NOT NULL,
-  info_icon VARCHAR(10),
-  display_order INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-COMMENT ON TABLE personal_info IS 'Personal information items untuk About section';
-COMMENT ON COLUMN personal_info.info_key IS 'Unique key (e.g., "email", "phone")';
-COMMENT ON COLUMN personal_info.info_label IS 'Display label (e.g., "Email", "Phone")';
-COMMENT ON COLUMN personal_info.info_icon IS 'Emoji icon untuk visual';
-
 
 -- =====================================================
 -- TABLE: skills
@@ -184,7 +145,7 @@ CREATE TABLE skills (
   id SERIAL PRIMARY KEY,
   skill_name VARCHAR(100) NOT NULL,
   skill_category VARCHAR(100) NOT NULL,
-  skill_icon VARCHAR(10) NOT NULL,
+  skill_icon TEXT NOT NULL,
   gradient_from VARCHAR(50) NOT NULL,
   gradient_to VARCHAR(50) NOT NULL,
   border_color VARCHAR(50) NOT NULL,
@@ -201,7 +162,7 @@ CREATE TABLE skills (
 COMMENT ON TABLE skills IS 'Skills list dengan custom gradient & icon';
 COMMENT ON COLUMN skills.skill_name IS 'Skill name (e.g., "React.js", "Node.js")';
 COMMENT ON COLUMN skills.skill_category IS 'Category (e.g., "JS Library", "Backend")';
-COMMENT ON COLUMN skills.skill_icon IS 'Emoji icon untuk skill';
+COMMENT ON COLUMN skills.skill_icon IS 'Icon emoji or URL (e.g., "⚛️" or "https://cdn.simpleicons.org/react")';
 COMMENT ON COLUMN skills.is_active IS 'Toggle untuk show/hide tanpa delete';
 
 
@@ -242,7 +203,6 @@ COMMENT ON COLUMN projects.gradient IS 'CSS gradient untuk card background';
 -- =====================================================
 
 CREATE INDEX idx_home_stats_order ON home_stats(display_order);
-CREATE INDEX idx_personal_info_order ON personal_info(display_order);
 CREATE INDEX idx_skills_active ON skills(is_active) WHERE is_active = TRUE;
 CREATE INDEX idx_skills_order ON skills(display_order);
 CREATE INDEX idx_projects_active ON projects(is_active) WHERE is_active = TRUE;
@@ -262,7 +222,6 @@ ALTER TABLE home_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE home_stats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profile_card ENABLE ROW LEVEL SECURITY;
 ALTER TABLE about_content ENABLE ROW LEVEL SECURITY;
-ALTER TABLE personal_info ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
@@ -286,10 +245,6 @@ CREATE POLICY "Enable read access for all users"
 
 CREATE POLICY "Enable read access for all users" 
   ON about_content FOR SELECT 
-  USING (true);
-
-CREATE POLICY "Enable read access for all users" 
-  ON personal_info FOR SELECT 
   USING (true);
 
 CREATE POLICY "Enable read access for all users" 
@@ -327,11 +282,6 @@ CREATE POLICY "Enable all operations for authenticated users"
 
 CREATE POLICY "Enable all operations for authenticated users" 
   ON about_content FOR ALL 
-  USING (true) 
-  WITH CHECK (true);
-
-CREATE POLICY "Enable all operations for authenticated users" 
-  ON personal_info FOR ALL 
   USING (true) 
   WITH CHECK (true);
 
@@ -377,12 +327,9 @@ INSERT INTO home_stats (stat_key, stat_value, stat_label, icon, gradient_from, g
   ('projects', '10+', 'Total Proyek', '🚀', '#3b82f6', '#06b6d4', 3),
   ('gpa', '3.68', 'IPK / 4.00', '🎓', '#10b981', '#06b6d4', 4);
 
-INSERT INTO profile_card (name, title, handle, status, contact_text, avatar_url, mini_avatar_url) VALUES (
-  'Taji Jadda Giras Sentosa',
-  'Software Engineer',
+INSERT INTO profile_card (handle, status, avatar_url, mini_avatar_url) VALUES (
   'tajijaddagiras_',
   'Online',
-  'Contact',
   '/images/profile.jpg',
   '/images/profile.jpg'
 );
@@ -401,37 +348,28 @@ INSERT INTO about_content (who_am_i_title, who_am_i_content, my_approach_title, 
   'lanyard.png'
 );
 
-INSERT INTO personal_info (info_key, info_label, info_value, info_icon, display_order) VALUES
-  ('name', 'Name', 'Taji Jadda Giras Sentosa', '👤', 1),
-  ('email', 'Email', 'tajijaddagirassntosa@gmail.com', '📧', 2),
-  ('phone', 'Phone', '081265098103', '📱', 3),
-  ('birthday', 'Birthday', 'Medan, 01 Mei 2003', '🎂', 4),
-  ('university', 'University', 'Universitas Samudra', '🎓', 5),
-  ('major', 'Major', 'Informatika - IPK 3.68/4.00', '📚', 6),
-  ('address', 'Address', 'lingk. IV lubuk dalam, kelurahan dendang, Stabat, Kab. Langkat', '🏠', 7);
-
 
 -- =====================================================
 -- DEFAULT DATA: Skills Section
 -- =====================================================
 
 INSERT INTO skills (skill_name, skill_category, skill_icon, gradient_from, gradient_to, border_color, display_order) VALUES
-  ('VS Code', 'Code Editor', '💻', '#06b6d4', '#3b82f6', '#06b6d4', 1),
-  ('React.js', 'JS Library', '⚛️', '#06b6d4', '#3b82f6', '#06b6d4', 2),
-  ('Next.js', 'React Framework', '▲', '#ffffff', '#d1d5db', '#ffffff', 3),
-  ('Tailwind CSS', 'CSS Framework', '🎨', '#22d3ee', '#3b82f6', '#22d3ee', 4),
-  ('Bootstrap', 'CSS Framework', '🅱️', '#a855f7', '#3b82f6', '#a855f7', 5),
-  ('JavaScript', 'Programming', '🟨', '#facc15', '#f97316', '#facc15', 6),
-  ('Node.js', 'Runtime', '🟢', '#22c55e', '#059669', '#22c55e', 7),
-  ('GitHub', 'Version Control', '🐙', '#9ca3af', '#6b7280', '#9ca3af', 8),
-  ('Vercel', 'Deployment', '▲', '#ffffff', '#d1d5db', '#ffffff', 9),
-  ('Supabase', 'Backend', '🔋', '#4ade80', '#10b981', '#4ade80', 10),
-  ('Firebase', 'Backend', '🔥', '#f97316', '#eab308', '#f97316', 11),
-  ('HTML5', 'Markup', '📄', '#f97316', '#dc2626', '#f97316', 12),
-  ('CSS3', 'Styling', '🎨', '#3b82f6', '#06b6d4', '#3b82f6', 13),
-  ('TypeScript', 'Programming', '📘', '#3b82f6', '#1e40af', '#3b82f6', 14),
-  ('PHP', 'Programming', '🐘', '#8b5cf6', '#6366f1', '#8b5cf6', 15),
-  ('MySQL', 'Database', '🗄️', '#06b6d4', '#0891b2', '#06b6d4', 16);
+  ('VS Code', 'Code Editor', 'https://cdn.simpleicons.org/visualstudiocode', '#06b6d4', '#3b82f6', '#06b6d4', 1),
+  ('React.js', 'JS Library', 'https://cdn.simpleicons.org/react', '#06b6d4', '#3b82f6', '#06b6d4', 2),
+  ('Next.js', 'React Framework', 'https://cdn.simpleicons.org/nextdotjs', '#ffffff', '#d1d5db', '#ffffff', 3),
+  ('Tailwind CSS', 'CSS Framework', 'https://cdn.simpleicons.org/tailwindcss', '#22d3ee', '#3b82f6', '#22d3ee', 4),
+  ('Bootstrap', 'CSS Framework', 'https://cdn.simpleicons.org/bootstrap', '#a855f7', '#3b82f6', '#a855f7', 5),
+  ('JavaScript', 'Programming', 'https://cdn.simpleicons.org/javascript', '#facc15', '#f97316', '#facc15', 6),
+  ('Node.js', 'Runtime', 'https://cdn.simpleicons.org/nodedotjs', '#22c55e', '#059669', '#22c55e', 7),
+  ('GitHub', 'Version Control', 'https://cdn.simpleicons.org/github', '#9ca3af', '#6b7280', '#9ca3af', 8),
+  ('Vercel', 'Deployment', 'https://cdn.simpleicons.org/vercel', '#ffffff', '#d1d5db', '#ffffff', 9),
+  ('Supabase', 'Backend', 'https://cdn.simpleicons.org/supabase', '#4ade80', '#10b981', '#4ade80', 10),
+  ('Firebase', 'Backend', 'https://cdn.simpleicons.org/firebase', '#f97316', '#eab308', '#f97316', 11),
+  ('HTML5', 'Markup', 'https://cdn.simpleicons.org/html5', '#f97316', '#dc2626', '#f97316', 12),
+  ('CSS3', 'Styling', 'https://cdn.simpleicons.org/css3', '#3b82f6', '#06b6d4', '#3b82f6', 13),
+  ('TypeScript', 'Programming', 'https://cdn.simpleicons.org/typescript', '#3b82f6', '#1e40af', '#3b82f6', 14),
+  ('PHP', 'Programming', 'https://cdn.simpleicons.org/php', '#8b5cf6', '#6366f1', '#8b5cf6', 15),
+  ('MySQL', 'Database', 'https://cdn.simpleicons.org/mysql', '#06b6d4', '#0891b2', '#06b6d4', 16);
 
 
 -- =====================================================
@@ -477,9 +415,6 @@ CREATE TRIGGER update_profile_card_updated_at BEFORE UPDATE ON profile_card
 CREATE TRIGGER update_about_content_updated_at BEFORE UPDATE ON about_content
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_personal_info_updated_at BEFORE UPDATE ON personal_info
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
 CREATE TRIGGER update_skills_updated_at BEFORE UPDATE ON skills
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
@@ -494,11 +429,11 @@ CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
 DO $$
 BEGIN
   RAISE NOTICE '✅ Database schema created successfully!';
-  RAISE NOTICE '📊 Tables created: 8';
+  RAISE NOTICE '📊 Tables created: 7';
   RAISE NOTICE '🔒 RLS enabled on all tables';
-  RAISE NOTICE '📝 Policies created: 16 (2 per table)';
-  RAISE NOTICE '🔍 Indexes created: 6';
-  RAISE NOTICE '⚡ Triggers created: 8 (with secure search_path)';
+  RAISE NOTICE '📝 Policies created: 14 (2 per table)';
+  RAISE NOTICE '🔍 Indexes created: 5';
+  RAISE NOTICE '⚡ Triggers created: 7 (with secure search_path)';
   RAISE NOTICE '🛡️ Security: Function search_path configured';
   RAISE NOTICE '';
   RAISE NOTICE '🎯 Next steps:';

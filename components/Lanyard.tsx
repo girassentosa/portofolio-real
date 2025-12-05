@@ -137,9 +137,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardT
             dir.copy(vec).sub(state.camera.position).normalize();
             vec.add(dir.multiplyScalar(state.camera.position.length()));
             [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-            const newX = vec.x - dragged.x;
-            const clampedX = Math.max(-2.5, Math.min(2.5, newX));
-            card.current?.setNextKinematicTranslation({ x: clampedX, y: vec.y - dragged.y, z: vec.z - dragged.z });
+            // Remove clamp limits - allow unlimited drag in all directions
+            card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
         }
         if (fixed.current) {
             [j1, j2].forEach(ref => {
@@ -224,7 +223,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardT
                     useMap
                     map={texture}
                     repeat={[-4, 1]}
-                    lineWidth={1}
+                    lineWidth={2}
                 />
             </mesh>
         </>

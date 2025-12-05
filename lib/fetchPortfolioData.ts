@@ -60,6 +60,7 @@ export async function fetchProfileCard(): Promise<ProfileCard | null> {
   }
 }
 
+
 // Fetch About Content
 export async function fetchAboutContent(): Promise<AboutContent | null> {
   try {

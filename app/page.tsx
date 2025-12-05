@@ -325,18 +325,16 @@ ${message}`;
 
             </div>
 
-            {/* Right Column - Profile Card - DYNAMIC! */}
+            {/* Right Column - ProfileCard */}
             <div className="flex justify-center lg:justify-end order-1 lg:order-2">
-              <div className="w-full max-w-[220px] sm:max-w-[260px] md:max-w-[300px] lg:max-w-[340px] xl:max-w-[360px]">
+              <div className="w-full lg:max-w-[340px] xl:max-w-[360px]">
                 {portfolioData.profileCard && (
                   <ProfileCard
-                    avatarUrl={portfolioData.profileCard.avatar_url}
-                    miniAvatarUrl={portfolioData.profileCard.mini_avatar_url}
-                    name={portfolioData.profileCard.name}
-                    title={portfolioData.profileCard.title}
                     handle={portfolioData.profileCard.handle}
                     status={portfolioData.profileCard.status}
-                    contactText={portfolioData.profileCard.contact_text}
+                    contactText="Contact Me"
+                    avatarUrl={portfolioData.profileCard.avatar_url}
+                    miniAvatarUrl={portfolioData.profileCard.mini_avatar_url}
                     showUserInfo={true}
                     enableTilt={true}
                     enableMobileTilt={false}
@@ -502,7 +500,15 @@ ${message}`;
 
                 <div className="relative flex items-center gap-2 w-full">
                   <div className="text-2xl sm:text-3xl transition-all duration-300 group-hover:scale-110 flex-shrink-0">
-                    {skill.skill_icon}
+                    {skill.skill_icon.startsWith('http') ? (
+                      <img
+                        src={skill.skill_icon}
+                        alt={skill.skill_name}
+                        className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+                      />
+                    ) : (
+                      skill.skill_icon
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs sm:text-sm font-bold text-white truncate">{skill.skill_name}</h3>

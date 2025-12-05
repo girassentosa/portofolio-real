@@ -180,7 +180,11 @@ export default function AdminSkills() {
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
-                <span className="text-3xl">{skill.skill_icon}</span>
+                {skill.skill_icon.startsWith('http') ? (
+                  <img src={skill.skill_icon} alt={skill.skill_name} className="w-8 h-8 object-contain" />
+                ) : (
+                  <span className="text-3xl">{skill.skill_icon}</span>
+                )}
                 <div>
                   <h3 className="text-white font-bold">{skill.skill_name}</h3>
                   <p className="text-gray-400 text-sm">{skill.skill_category}</p>
@@ -266,7 +270,7 @@ export default function AdminSkills() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-300 mb-2">Icon</label>
+                  <label className="block text-sm text-gray-300 mb-2">Icon (Emoji or URL)</label>
                   <input
                     type="text"
                     value={editingSkill.skill_icon}
@@ -274,7 +278,15 @@ export default function AdminSkills() {
                       setEditingSkill({ ...editingSkill, skill_icon: e.target.value })
                     }
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                    placeholder="https://cdn.simpleicons.org/react"
                   />
+                  <p className="text-xs text-gray-400 mt-1">Use emoji (⚛️) or URL from <a href="https://simpleicons.org" target="_blank" className="text-cyan-400 hover:underline">Simple Icons</a></p>
+                  {editingSkill.skill_icon.startsWith('http') && (
+                    <div className="mt-2 p-2 bg-gray-700/50 rounded border border-gray-600">
+                      <p className="text-xs text-gray-400 mb-1">Preview:</p>
+                      <img src={editingSkill.skill_icon} alt="Icon preview" className="w-12 h-12 object-contain" />
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -413,14 +425,21 @@ export default function AdminSkills() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-300 mb-2">Icon</label>
+                  <label className="block text-sm text-gray-300 mb-2">Icon (Emoji or URL)</label>
                   <input
                     type="text"
                     value={newSkill.skill_icon}
                     onChange={(e) => setNewSkill({ ...newSkill, skill_icon: e.target.value })}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                    placeholder="⚛️"
+                    placeholder="https://cdn.simpleicons.org/react"
                   />
+                  <p className="text-xs text-gray-400 mt-1">Use emoji (⚛️) or URL from <a href="https://simpleicons.org" target="_blank" className="text-cyan-400 hover:underline">Simple Icons</a></p>
+                  {newSkill.skill_icon && newSkill.skill_icon.startsWith('http') && (
+                    <div className="mt-2 p-2 bg-gray-700/50 rounded border border-gray-600">
+                      <p className="text-xs text-gray-400 mb-1">Preview:</p>
+                      <img src={newSkill.skill_icon} alt="Icon preview" className="w-12 h-12 object-contain" />
+                    </div>
+                  )}
                 </div>
 
                 <div>

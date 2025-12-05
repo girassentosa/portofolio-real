@@ -65,10 +65,8 @@ export default function AdminHome() {
       const { error } = await supabase
         .from('profile_card')
         .update({
-          // name and title removed from update
           handle: profileCard.handle,
           status: profileCard.status,
-          contact_text: profileCard.contact_text,
           avatar_url: profileCard.avatar_url,
           mini_avatar_url: profileCard.mini_avatar_url,
           updated_at: new Date().toISOString(),
@@ -179,8 +177,6 @@ export default function AdminHome() {
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Name and Title inputs removed as per request */}
-
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Handle (Username)</label>
               <input
@@ -285,4 +281,3 @@ export default function AdminHome() {
     </div>
   );
 }
-
