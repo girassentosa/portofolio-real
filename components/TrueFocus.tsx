@@ -107,7 +107,8 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
               // @ts-ignore
               '--border-color': borderColor,
               '--glow-color': glowColor,
-              transition: `filter ${animationDuration}s ease`
+              transition: `filter ${animationDuration}s ease`,
+              willChange: 'filter' // Optimization: hint browser to optimize composite layer
             }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}

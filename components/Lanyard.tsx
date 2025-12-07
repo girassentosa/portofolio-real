@@ -37,6 +37,10 @@ export default function Lanyard({
     cardFile = 'card.glb',
     textureFile = 'lanyard.png'
 }: LanyardProps) {
+    // Preload assets to prevent pop-in
+    useGLTF.preload(`/assets/lanyard/${cardFile}`);
+    useTexture.preload(`/assets/lanyard/${textureFile}`);
+
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
     const [inView, setInView] = useState(false); // Start false, let observer control
     const containerRef = useRef<HTMLDivElement>(null);
@@ -44,6 +48,8 @@ export default function Lanyard({
     // Build full paths from filenames
     const cardGLB = `/assets/lanyard/${cardFile}`;
     const lanyardTexture = `/assets/lanyard/${textureFile}`;
+
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -69,12 +75,27 @@ export default function Lanyard({
 
     return (
         <div ref={containerRef} className="relative z-0 w-full h-full flex justify-center items-end md:items-center transform scale-100 origin-center">
+            {/* Visual Placeholder (prevents pop-in) */}
+            <div
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ${ready ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                style={{ zIndex: 1 }}
+            >
+                <div className="w-[180px] h-[260px] md:w-[220px] md:h-[320px] bg-white/5 backdrop-blur-sm rounded-[15px] border border-white/10 flex items-center justify-center relative shadow-2xl">
+                    <div className="absolute -top-24 left-1/2 w-1 h-24 bg-white/20 -translate-x-1/2"></div>
+                    <div className="text-white/20 text-sm font-medium animate-pulse">Loading ID...</div>
+                </div>
+            </div>
+
             {inView && (
                 <Canvas
                     camera={{ position: position as [number, number, number], fov: fov }}
                     dpr={[1, isMobile ? 1.5 : 2]}
                     gl={{ alpha: transparent, powerPreference: "high-performance" }}
-                    onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+                    onCreated={({ gl }) => {
+                        gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
+                        // Signal ready after a short delay to ensure first frame is rendered
+                        setTimeout(() => setReady(true), 500);
+                    }}
                     frameloop="always"
                 >
                     <ambientLight intensity={Math.PI} />

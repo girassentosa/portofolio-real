@@ -112,8 +112,9 @@ const LightRays = ({
 
       if (!containerRef.current) return;
 
+      const isMobile = window.innerWidth < 768;
       const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
+        dpr: Math.min(window.devicePixelRatio, isMobile ? 1 : 2), // Lower quality on mobile for speed
         alpha: true,
         // @ts-ignore
         attributes: {
@@ -262,7 +263,8 @@ void main() {
       const updatePlacement = () => {
         if (!containerRef.current || !renderer) return;
 
-        renderer.dpr = Math.min(window.devicePixelRatio, 2);
+        const isMobile = window.innerWidth < 768;
+        renderer.dpr = Math.min(window.devicePixelRatio, isMobile ? 1 : 2);
 
         const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
         renderer.setSize(wCSS, hCSS);

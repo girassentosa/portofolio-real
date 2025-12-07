@@ -172,8 +172,12 @@ export default function PixelCard({
       : false
   ).current;
 
+  // Optimize: Increase gap on mobile to reduce particle count (performance)
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
   const variantCfg = VARIANTS[variant] || VARIANTS.default;
-  const finalGap = gap ?? variantCfg.gap;
+  const baseGap = gap ?? variantCfg.gap;
+  const finalGap = isMobile ? baseGap * 2 : baseGap; // Double gap on mobile = 4x fewer pixels
+
   const finalSpeed = speed ?? variantCfg.speed;
   const finalColors = colors ?? variantCfg.colors;
   const finalNoFocus = noFocus ?? variantCfg.noFocus;
