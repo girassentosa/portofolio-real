@@ -75,24 +75,44 @@ const CVDownloadModal = ({ isOpen, onClose }: CVDownloadModalProps) => {
                                     </p>
                                 </div>
 
-                                {/* Action Button */}
-                                <a
-                                    href="/curriculum-vitae.pdf"
-                                    download="Taji_CV.pdf"
-                                    className="w-full relative group overflow-hidden rounded-xl p-[1px] focus:outline-none"
-                                    onClick={() => {
-                                        // Optional: Add analytics tracking here
-                                        setTimeout(onClose, 1000);
-                                    }}
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 transition-all duration-300 group-hover:scale-105"></div>
-                                    <div className="relative bg-[#0f0f0f] hover:bg-black/80 text-white rounded-[11px] px-6 py-3.5 transition-colors flex items-center justify-center gap-2 font-medium">
-                                        <span>Download PDF</span>
-                                        <svg className="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                    </div>
-                                </a>
+                                {/* Action Buttons */}
+                                <div className="w-full space-y-3">
+                                    {/* PDF Download */}
+                                    <a
+                                        href="/images/CV TAJI JADDA GIRAS SENTOSA.pdf"
+                                        download="CV_Taji_Jadda_Giras_Sentosa.pdf"
+                                        className="w-full relative group overflow-hidden rounded-xl p-[1px] focus:outline-none block"
+                                        onClick={() => {
+                                            setTimeout(onClose, 1000);
+                                        }}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 transition-all duration-300 group-hover:scale-105"></div>
+                                        <div className="relative bg-[#0f0f0f] hover:bg-black/80 text-white rounded-[11px] px-6 py-3.5 transition-colors flex items-center justify-center gap-2 font-medium">
+                                            <span>Download PDF</span>
+                                            <svg className="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                        </div>
+                                    </a>
+
+                                    {/* JPG Download */}
+                                    <a
+                                        href="/images/CV TAJI JADDA GIRAS SENTOSA.jpg"
+                                        download="CV_Taji_Jadda_Giras_Sentosa.jpg"
+                                        className="w-full relative group overflow-hidden rounded-xl p-[1px] focus:outline-none block"
+                                        onClick={() => {
+                                            setTimeout(onClose, 1000);
+                                        }}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 transition-all duration-300 group-hover:scale-105"></div>
+                                        <div className="relative bg-[#0f0f0f] hover:bg-black/80 text-white rounded-[11px] px-6 py-3.5 transition-colors flex items-center justify-center gap-2 font-medium">
+                                            <span>Download JPG</span>
+                                            <svg className="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                </div>
 
                                 <div className="text-xs text-white/30 pt-2">
                                     Last updated: December 2025

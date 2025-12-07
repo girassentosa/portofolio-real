@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project } from '@/types/database';
@@ -12,7 +13,7 @@ interface ProjectModalProps {
     onClose: () => void;
 }
 
-const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
+const ProjectModal = React.memo(({ project, isOpen, onClose }: ProjectModalProps) => {
     const [mounted, setMounted] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -221,6 +222,8 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
         </AnimatePresence>,
         document.body
     );
-};
+});
+
+ProjectModal.displayName = 'ProjectModal';
 
 export default ProjectModal;

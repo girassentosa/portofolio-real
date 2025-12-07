@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -8,6 +9,25 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+interface LanyardProps {
+    position?: number[];
+    gravity?: number[];
+    fov?: number;
+    transparent?: boolean;
+    cardFile?: string;
+    textureFile?: string;
+}
+
+interface BandProps {
+    maxSpeed?: number;
+    minSpeed?: number;
+    isMobile?: boolean;
+    cardGLB: string;
+    lanyardTexture: string;
+    inView?: boolean;
+}
+
 
 export default function Lanyard({
     position = [0, 0, 30],
@@ -18,7 +38,7 @@ export default function Lanyard({
     textureFile = 'lanyard.png'
 }: LanyardProps) {
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
-    const [inView, setInView] = useState(true);
+    const [inView, setInView] = useState(false); // Start false, let observer control
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Build full paths from filenames
@@ -29,12 +49,12 @@ export default function Lanyard({
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
 
-        // Intersection Observer logic
+        // Intersection Observer - render Canvas only when in view
         const observer = new IntersectionObserver(
             ([entry]) => {
                 setInView(entry.isIntersecting);
             },
-            { threshold: 0.1 } // Start rendering when 10% visible
+            { threshold: 0.1 }
         );
 
         if (containerRef.current) {
@@ -55,12 +75,10 @@ export default function Lanyard({
                     dpr={[1, isMobile ? 1.5 : 2]}
                     gl={{ alpha: transparent, powerPreference: "high-performance" }}
                     onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
-                    frameloop="demand" // Use demand only if needed, but for physics we often need always. Let's stick to conditional rendering of the Canvas content or just unmounting it? Unmounting Canvas is heavy. 
-                // Better approach: Let's keep Canvas but use `frameloop="always"` only when visible.
-                // Actually, conditional rendering of the whole Canvas is the most effective way to stop the loop completely.
+                    frameloop="always"
                 >
                     <ambientLight intensity={Math.PI} />
-                    <Physics gravity={gravity as [number, number, number]} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!inView}>
+                    <Physics gravity={gravity as [number, number, number]} timeStep={isMobile ? 1 / 30 : 1 / 60}>
                         <Band isMobile={isMobile} cardGLB={cardGLB} lanyardTexture={lanyardTexture} inView={inView} />
                     </Physics>
                     <Environment blur={0.75}>
@@ -73,24 +91,6 @@ export default function Lanyard({
             )}
         </div>
     );
-}
-
-interface LanyardProps {
-    position?: number[];
-    gravity?: number[];
-    fov?: number;
-    transparent?: boolean;
-    cardFile?: string;
-    textureFile?: string;
-}
-
-interface BandProps {
-    maxSpeed?: number;
-    minSpeed?: number;
-    isMobile?: boolean;
-    cardGLB: string;
-    lanyardTexture: string;
-    inView?: boolean;
 }
 
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardTexture, inView = true }: BandProps) {

@@ -8,6 +8,7 @@ import PixelCard from '@/components/PixelCard';
 import CVDownloadModal from '@/components/CVDownloadModal';
 import dynamic from 'next/dynamic';
 import FadeIn from '@/components/FadeIn';
+import BlurText from '@/components/BlurText';
 
 // Lazy load heavy components
 const Lanyard = dynamic(() => import('@/components/Lanyard'), {
@@ -110,7 +111,7 @@ export default function Home() {
         }
 
         if (formData.sendVia === 'whatsapp') {
-            const phoneNumber = '62882006930031'; // Replace with actual number
+            const phoneNumber = '6281265098103'; // Updated number
             const text = `Name: ${formData.name}%0AEmail: ${formData.email}%0ASubject: ${formData.subject}%0A%0A${formData.message}`;
             window.open(`https://wa.me/${phoneNumber}?text=${text}`, '_blank');
         } else {
@@ -118,6 +119,15 @@ export default function Home() {
             const body = `Name: ${formData.name}%0AEmail: ${formData.email}%0A%0A${formData.message}`;
             window.open(`mailto:tajijaddagirassntosa@gmail.com?subject=${subject}&body=${body}`);
         }
+
+        // Auto-clear form after submission
+        setFormData({
+            name: '',
+            email: '',
+            subject: 'website',
+            message: '',
+            sendVia: 'whatsapp'
+        });
     };
 
     useEffect(() => {
@@ -377,9 +387,13 @@ export default function Home() {
                                                         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                                                             Who am I
                                                         </h2>
-                                                        <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
-                                                            {portfolioData.aboutContent?.who_am_i_content || 'Content not available'}
-                                                        </p>
+                                                        <BlurText
+                                                            text={portfolioData.aboutContent?.who_am_i_content || 'Content not available'}
+                                                            delay={100}
+                                                            animateBy="words"
+                                                            direction="top"
+                                                            className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify"
+                                                        />
                                                     </div>
 
                                                     {/* My Approach Section */}
@@ -387,9 +401,13 @@ export default function Home() {
                                                         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                                                             My Approach
                                                         </h2>
-                                                        <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify">
-                                                            {portfolioData.aboutContent?.my_approach_content || 'Content not available'}
-                                                        </p>
+                                                        <BlurText
+                                                            text={portfolioData.aboutContent?.my_approach_content || 'Content not available'}
+                                                            delay={100}
+                                                            animateBy="words"
+                                                            direction="top"
+                                                            className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed text-justify"
+                                                        />
                                                     </div>
 
                                                 </div>
@@ -548,9 +566,7 @@ export default function Home() {
                                 handle: project.project_handle || '',
                                 borderColor: project.border_color,
                                 gradient: project.gradient || 'linear-gradient(135deg, #0f0f0f, #1a1a1a)',
-                                url: project.project_url || '#',
-                                // Pass full project data for modal reference if needed, but we'll use ID lookup or just pass index
-                                // Actually ChromaGrid returns the item, so we need to map it back or just attach the project data
+                                url: project.project_url || '#'
                             }))}
                             onProjectClick={(item) => {
                                 const project = portfolioData.projects.find(p => p.id === item.id);
