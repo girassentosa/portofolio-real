@@ -3,6 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import NextImage from 'next/image';
+import FadeIn from './FadeIn';
 
 interface ChromaGridItem {
     id?: number;
@@ -177,41 +178,47 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
             }}
         >
             {data.map((c, i) => (
-                <article
+                <FadeIn
                     key={i}
-                    onMouseMove={handleCardMove}
-                    onClick={() => handleCardClick(c)}
-                    className="group relative flex flex-col w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)] h-[280px] sm:h-[300px] rounded-[16px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
-                    style={{
-                        ['--card-border' as string]: c.borderColor || 'transparent',
-                        background: c.gradient,
-                        ['--spotlight-color' as string]: 'rgba(255,255,255,0.3)'
-                    }}
+                    delay={0.1 + (i * 0.1)}
+                    direction="up"
+                    className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
                 >
-                    <div
-                        className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100"
+                    <article
+                        onMouseMove={handleCardMove}
+                        onClick={() => handleCardClick(c)}
+                        className="group relative flex flex-col w-full h-[280px] sm:h-[300px] rounded-[16px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
                         style={{
-                            background:
-                                'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
-                        }}
-                    />
-                    <div className="relative z-10 flex-1 p-[8px] sm:p-[10px] box-border min-h-0">
-                        {/* Optimized Image */}
-                        <NextImage
-                            src={c.image}
-                            alt={c.title}
-                            fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="w-full h-full object-cover rounded-[8px] sm:rounded-[10px]"
+                            '--card-border': c.borderColor || 'transparent',
+                            background: c.gradient,
+                            '--spotlight-color': 'rgba(255,255,255,0.3)'
+                        } as React.CSSProperties}
+                    >
+                        <div
+                            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100"
+                            style={{
+                                background:
+                                    'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
+                            }}
                         />
-                    </div>
-                    <footer className="relative z-10 p-2 sm:p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 gap-y-0.5">
-                        <h3 className="m-0 text-xs sm:text-sm font-semibold truncate">{c.title}</h3>
-                        {c.handle && <span className="text-[10px] sm:text-xs opacity-80 text-right truncate">{c.handle}</span>}
-                        <p className="m-0 text-[10px] sm:text-xs opacity-85 truncate">{c.subtitle}</p>
-                        {c.location && <span className="text-[10px] sm:text-xs opacity-85 text-right truncate">{c.location}</span>}
-                    </footer>
-                </article>
+                        <div className="relative z-10 flex-1 p-[8px] sm:p-[10px] box-border min-h-0">
+                            {/* Optimized Image */}
+                            <NextImage
+                                src={c.image}
+                                alt={c.title}
+                                fill
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                className="w-full h-full object-cover rounded-[8px] sm:rounded-[10px]"
+                            />
+                        </div>
+                        <footer className="relative z-10 p-2 sm:p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 gap-y-0.5">
+                            <h3 className="m-0 text-xs sm:text-sm font-semibold truncate">{c.title}</h3>
+                            {c.handle && <span className="text-[10px] sm:text-xs opacity-80 text-right truncate">{c.handle}</span>}
+                            <p className="m-0 text-[10px] sm:text-xs opacity-85 truncate">{c.subtitle}</p>
+                            {c.location && <span className="text-[10px] sm:text-xs opacity-85 text-right truncate">{c.location}</span>}
+                        </footer>
+                    </article>
+                </FadeIn>
             ))}
             <div
                 className="absolute inset-0 pointer-events-none z-30"

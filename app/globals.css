@@ -30,17 +30,7 @@ body {
   min-height: -webkit-fill-available;
 }
 
-/* Hide navbar by default, show setelah loading */
-header {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease 0.2s;
-}
-
-body[data-page-loading="false"] header {
-  opacity: 1;
-  pointer-events: auto;
-}
+/* Navbar visibility handled by React/Framer Motion */
 
 /* Custom Animations */
 @keyframes fade-in {
