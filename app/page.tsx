@@ -22,6 +22,7 @@ const ChromaGrid = dynamic(() => import('@/components/ChromaGrid'), {
     loading: () => <div className="w-full h-[600px] flex items-center justify-center text-white/20">Loading Projects...</div>
 });
 
+const GradientText = dynamic(() => import('@/components/GradientText'), { ssr: true });
 const ProjectModal = dynamic(() => import('@/components/ProjectModal'), {
     ssr: false
 });
@@ -353,16 +354,11 @@ export default function Home() {
                     <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
                         <FadeIn delay={0.1} direction="down">
                             <div className="flex justify-center items-center">
-                                <TrueFocus
-                                    sentence="About Me"
-                                    manualMode={false}
-                                    blurAmount={5}
-                                    borderColor="#06b6d4"
-                                    glowColor="rgba(6, 182, 212, 0.6)"
-                                    animationDuration={0.5}
-                                    pauseBetweenAnimations={0.5}
-                                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
-                                />
+                                <div className="flex justify-center items-center">
+                                    <GradientText className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                                        About Me
+                                    </GradientText>
+                                </div>
                             </div>
                             <div className="mt-3 sm:mt-4 w-20 sm:w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto rounded-full"></div>
                         </FadeIn>
@@ -466,16 +462,11 @@ export default function Home() {
                     <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
                         <FadeIn delay={0.1} direction="down">
                             <div className="flex justify-center items-center">
-                                <TrueFocus
-                                    sentence="My Skills"
-                                    manualMode={false}
-                                    blurAmount={5}
-                                    borderColor="#06b6d4"
-                                    glowColor="rgba(6, 182, 212, 0.6)"
-                                    animationDuration={0.5}
-                                    pauseBetweenAnimations={0.5}
-                                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
-                                />
+                                <div className="flex justify-center items-center">
+                                    <GradientText className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                                        My Skills
+                                    </GradientText>
+                                </div>
                             </div>
                             <div className="mt-3 sm:mt-4 w-20 sm:w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto rounded-full"></div>
                         </FadeIn>
@@ -544,16 +535,11 @@ export default function Home() {
                     <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
                         <FadeIn delay={0.1} direction="down">
                             <div className="flex justify-center items-center">
-                                <TrueFocus
-                                    sentence="My Projects"
-                                    manualMode={false}
-                                    blurAmount={5}
-                                    borderColor="#06b6d4"
-                                    glowColor="rgba(6, 182, 212, 0.6)"
-                                    animationDuration={0.5}
-                                    pauseBetweenAnimations={0.5}
-                                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
-                                />
+                                <div className="flex justify-center items-center">
+                                    <GradientText className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                                        My Projects
+                                    </GradientText>
+                                </div>
                             </div>
                             <div className="mt-3 sm:mt-4 w-20 sm:w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto rounded-full"></div>
                         </FadeIn>
@@ -599,16 +585,11 @@ export default function Home() {
                     <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
                         <FadeIn delay={0.1} direction="down">
                             <div className="flex justify-center items-center">
-                                <TrueFocus
-                                    sentence="Contact Me"
-                                    manualMode={false}
-                                    blurAmount={5}
-                                    borderColor="#06b6d4"
-                                    glowColor="rgba(6, 182, 212, 0.6)"
-                                    animationDuration={0.5}
-                                    pauseBetweenAnimations={0.5}
-                                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl"
-                                />
+                                <div className="flex justify-center items-center">
+                                    <GradientText className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                                        Contact Me
+                                    </GradientText>
+                                </div>
                             </div>
                             <div className="mt-3 sm:mt-4 w-20 sm:w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto rounded-full"></div>
                         </FadeIn>
