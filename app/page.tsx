@@ -823,7 +823,7 @@ export default function Home() {
                                     <li>
                                         <div className="group flex items-start gap-2 text-xs sm:text-sm text-white/60">
                                             <span className="mt-0.5 text-cyan-500 group-hover:scale-110 transition-transform duration-300">📍</span>
-                                            <span>Jawa Barat, Indonesia</span>
+                                            <span>Langkat, Sumatra Utara, Indonesia</span>
                                         </div>
                                     </li>
                                     <li>
