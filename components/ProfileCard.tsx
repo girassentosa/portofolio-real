@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import './ProfileCard.css';
 
 const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)';
@@ -61,6 +61,26 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
 
     const enterTimerRef = useRef<number | null>(null);
     const leaveRafRef = useRef<number | null>(null);
+
+    // Track visibility
+    const [inView, setInView] = useState(true);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setInView(entry.isIntersecting);
+            },
+            { threshold: 0.1 }
+        );
+
+        if (wrapRef.current) {
+            observer.observe(wrapRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     const tiltEngine = useMemo(() => {
         if (!enableTilt) return null;
@@ -170,9 +190,28 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 rafId = null;
                 running = false;
                 lastTs = 0;
+            },
+            checkVisibilityAndStop() {
+                this.cancel();
+            },
+            resumeIfVisible() {
+                // Determine if we need to resume based on target vs current or just leave it
+                // Actually start() checks running state
+                start();
             }
         };
     }, [enableTilt]);
+
+    // Effect to stop/start engine based on visibility
+    useEffect(() => {
+        if (!tiltEngine) return;
+        if (inView) {
+            tiltEngine.resumeIfVisible();
+        } else {
+            tiltEngine.checkVisibilityAndStop();
+        }
+    }, [inView, tiltEngine]);
+
 
     const getOffsets = (evt: PointerEvent, el: HTMLElement) => {
         const rect = el.getBoundingClientRect();
@@ -182,17 +221,17 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
     const handlePointerMove = useCallback(
         (event: PointerEvent) => {
             const shell = shellRef.current;
-            if (!shell || !tiltEngine) return;
+            if (!shell || !tiltEngine || !inView) return;
             const { x, y } = getOffsets(event, shell);
             tiltEngine.setTarget(x, y);
         },
-        [tiltEngine]
+        [tiltEngine, inView]
     );
 
     const handlePointerEnter = useCallback(
         (event: PointerEvent) => {
             const shell = shellRef.current;
-            if (!shell || !tiltEngine) return;
+            if (!shell || !tiltEngine || !inView) return;
 
             shell.classList.add('active');
             shell.classList.add('entering');
@@ -204,12 +243,12 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             const { x, y } = getOffsets(event, shell);
             tiltEngine.setTarget(x, y);
         },
-        [tiltEngine]
+        [tiltEngine, inView]
     );
 
     const handlePointerLeave = useCallback(() => {
         const shell = shellRef.current;
-        if (!shell || !tiltEngine) return;
+        if (!shell || !tiltEngine || !inView) return;
 
         tiltEngine.toCenter();
 
@@ -225,12 +264,12 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         };
         if (leaveRafRef.current) cancelAnimationFrame(leaveRafRef.current);
         leaveRafRef.current = requestAnimationFrame(checkSettle);
-    }, [tiltEngine]);
+    }, [tiltEngine, inView]);
 
     const handleDeviceOrientation = useCallback(
         (event: DeviceOrientationEvent) => {
             const shell = shellRef.current;
-            if (!shell || !tiltEngine) return;
+            if (!shell || !tiltEngine || !inView) return;
 
             const { beta, gamma } = event;
             if (beta == null || gamma == null) return;
@@ -241,12 +280,12 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             const y = clamp(
                 centerY + (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * mobileTiltSensitivity,
                 0,
-                shell.clientHeight
+                0
             );
 
             tiltEngine.setTarget(x, y);
         },
-        [tiltEngine, mobileTiltSensitivity]
+        [tiltEngine, mobileTiltSensitivity, inView]
     );
 
     useEffect(() => {
@@ -255,6 +294,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         const shell = shellRef.current;
         if (!shell) return;
 
+        // Use standard event listener with passive option for better scroll performance where possible
+        // but pointer events don't have passive
         const pointerMoveHandler = handlePointerMove as any;
         const pointerEnterHandler = handlePointerEnter as any;
         const pointerLeaveHandler = handlePointerLeave as any;
@@ -333,6 +374,11 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                         <div className="pc-shine" />
                         <div className="pc-glare" />
                         <div className="pc-content pc-avatar-content">
+                            {/* Replaced img with div+bg or keeping img but optimize if possible. 
+                                Since next/image requires width/height and this CSS might be dynamic, 
+                                let's use a simple img tag but ensure it has loading="lazy" (which it did).
+                                To really optimize, we should use next/image. 
+                            */}
                             <img
                                 className="avatar"
                                 src={avatarUrl}

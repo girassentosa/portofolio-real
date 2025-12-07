@@ -15,28 +15,38 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
+    let rafId: number | null = null;
+
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'project', 'contact'];
-      const scrollPosition = window.scrollY + 200;
+      if (rafId) return;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetBottom = offsetTop + element.offsetHeight;
+      rafId = requestAnimationFrame(() => {
+        const sections = ['home', 'about', 'skills', 'project', 'contact'];
+        const scrollPosition = window.scrollY + 200;
 
-          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
-            setActiveSection(`#${section}`);
-            break;
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (element) {
+            const offsetTop = element.offsetTop;
+            const offsetBottom = offsetTop + element.offsetHeight;
+
+            if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+              setActiveSection(`#${section}`);
+              break;
+            }
           }
         }
-      }
+        rafId = null;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Call once on mount
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -80,8 +90,8 @@ export default function Navbar() {
                 href={item.href}
                 onClick={(e) => handleClick(e, item.href)}
                 className={`relative px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base font-medium rounded-full transition-all duration-300 whitespace-nowrap ${activeSection === item.href
-                    ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-50 border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
-                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                  ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-50 border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
+                  : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
               >
                 {item.label}

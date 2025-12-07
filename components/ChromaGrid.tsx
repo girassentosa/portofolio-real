@@ -2,9 +2,10 @@
 
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import NextImage from 'next/image';
 
 interface ChromaGridItem {
-    id?: number; // Added ID for identification
+    id?: number;
     image: string;
     title: string;
     subtitle: string;
@@ -22,7 +23,7 @@ interface ChromaGridProps {
     damping?: number;
     fadeOut?: number;
     ease?: string;
-    onProjectClick?: (item: ChromaGridItem) => void; // Added callback
+    onProjectClick?: (item: ChromaGridItem) => void;
 }
 
 const ChromaGrid: React.FC<ChromaGridProps> = ({
@@ -32,7 +33,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
     damping = 0.45,
     fadeOut = 0.6,
     ease = 'power3.out',
-    onProjectClick // Destructure new prop
+    onProjectClick
 }) => {
     const rootRef = useRef<HTMLDivElement>(null);
     const fadeRef = useRef<HTMLDivElement>(null);
@@ -50,7 +51,56 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
             gradient: 'linear-gradient(145deg,#4F46E5,#000)',
             url: 'https://github.com/'
         },
-        // ... (rest of demo data unchanged)
+        // ... (rest of demo data unchanged - assuming standard demo data or empty)
+        {
+            image: 'https://i.pravatar.cc/300?img=2',
+            title: 'Sarah Chen',
+            subtitle: 'UI/UX Designer',
+            handle: '@sarahdesign',
+            location: 'San Francisco, CA',
+            borderColor: '#EC4899',
+            gradient: 'linear-gradient(145deg,#EC4899,#000)',
+            url: 'https://dribbble.com/'
+        },
+        {
+            image: 'https://i.pravatar.cc/300?img=12',
+            title: 'James Wilson',
+            subtitle: 'DevOps Engineer',
+            handle: '@jwilsonops',
+            location: 'London, UK',
+            borderColor: '#10B981',
+            gradient: 'linear-gradient(145deg,#10B981,#000)',
+            url: 'https://gitlab.com/'
+        },
+        {
+            image: 'https://i.pravatar.cc/300?img=8',
+            title: 'Alex Rivera',
+            subtitle: 'Full Stack Developer',
+            handle: '@alexrivera',
+            borderColor: '#4F46E5',
+            gradient: 'linear-gradient(145deg,#4F46E5,#000)',
+            url: 'https://github.com/'
+        },
+        {
+            image: 'https://i.pravatar.cc/300?img=2',
+            title: 'Sarah Chen',
+            subtitle: 'UI/UX Designer',
+            handle: '@sarahdesign',
+            location: 'San Francisco, CA',
+            borderColor: '#EC4899',
+            gradient: 'linear-gradient(145deg,#EC4899,#000)',
+            url: 'https://dribbble.com/'
+        },
+        {
+            image: 'https://i.pravatar.cc/300?img=12',
+            title: 'James Wilson',
+            subtitle: 'DevOps Engineer',
+            handle: '@jwilsonops',
+            location: 'London, UK',
+            borderColor: '#10B981',
+            gradient: 'linear-gradient(145deg,#10B981,#000)',
+            url: 'https://gitlab.com/'
+        }
     ];
 
     const data = items?.length ? items : demo;
@@ -146,7 +196,14 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
                         }}
                     />
                     <div className="relative z-10 flex-1 p-[8px] sm:p-[10px] box-border min-h-0">
-                        <img src={c.image} alt={c.title} loading="lazy" width="400" height="300" className="w-full h-full object-cover rounded-[8px] sm:rounded-[10px]" />
+                        {/* Optimized Image */}
+                        <NextImage
+                            src={c.image}
+                            alt={c.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="w-full h-full object-cover rounded-[8px] sm:rounded-[10px]"
+                        />
                     </div>
                     <footer className="relative z-10 p-2 sm:p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-2 gap-y-0.5">
                         <h3 className="m-0 text-xs sm:text-sm font-semibold truncate">{c.title}</h3>

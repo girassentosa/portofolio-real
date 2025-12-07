@@ -27,6 +27,8 @@ const getAnchorAndDir = (origin: string, w: number, h: number) => {
       return { anchor: [0.5 * w, (1 + outside) * h], dir: [0, -1] };
     case 'bottom-right':
       return { anchor: [w, (1 + outside) * h], dir: [0, -1] };
+    case 'bottom-center':
+      return { anchor: [0.5 * w, (1 + outside) * h], dir: [0, -1] }; // Duplicate case handled gracefully
     default: // "top-center"
       return { anchor: [0.5 * w, -outside * h], dir: [0, 1] };
   }
@@ -111,8 +113,12 @@ const LightRays = ({
       if (!containerRef.current) return;
 
       const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 3),
-        alpha: true
+        dpr: Math.min(window.devicePixelRatio, 2),
+        alpha: true,
+        // @ts-ignore
+        attributes: {
+          powerPreference: "high-performance"
+        }
       });
       rendererRef.current = renderer;
 
@@ -256,7 +262,7 @@ void main() {
       const updatePlacement = () => {
         if (!containerRef.current || !renderer) return;
 
-        renderer.dpr = Math.min(window.devicePixelRatio, 3);
+        renderer.dpr = Math.min(window.devicePixelRatio, 2);
 
         const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
         renderer.setSize(wCSS, hCSS);
@@ -312,14 +318,18 @@ void main() {
         if (renderer) {
           try {
             const canvas = renderer.gl.canvas;
+
+            // Safe removal from DOM
+            if (canvas && canvas.parentNode) {
+              canvas.parentNode.removeChild(canvas);
+            }
+
+            // Attempt to lose context
             const loseContextExt = renderer.gl.getExtension('WEBGL_lose_context');
             if (loseContextExt) {
               loseContextExt.loseContext();
             }
 
-            if (canvas && canvas.parentNode) {
-              canvas.parentNode.removeChild(canvas);
-            }
           } catch (error) {
             console.warn('Error during WebGL cleanup:', error);
           }
@@ -354,6 +364,35 @@ void main() {
     noiseAmount,
     distortion
   ]);
+
+  // Pause on tab switch logic
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      } else if (!document.hidden && !animationIdRef.current && rendererRef.current && meshRef.current) {
+        // Restart loop if visible and context exists
+        const loop = (t: number) => {
+          if (!rendererRef.current || !uniformsRef.current || !meshRef.current) return;
+          uniformsRef.current.iTime.value = t * 0.001;
+
+          if (followMouse && mouseInfluence > 0.0) {
+            const smoothing = 0.92;
+            smoothMouseRef.current.x = smoothMouseRef.current.x * smoothing + mouseRef.current.x * (1 - smoothing);
+            smoothMouseRef.current.y = smoothMouseRef.current.y * smoothing + mouseRef.current.y * (1 - smoothing);
+            uniformsRef.current.mousePos.value = [smoothMouseRef.current.x, smoothMouseRef.current.y];
+          }
+
+          rendererRef.current.render({ scene: meshRef.current });
+          animationIdRef.current = requestAnimationFrame(loop);
+        }
+        animationIdRef.current = requestAnimationFrame(loop);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [followMouse, mouseInfluence]);
 
   useEffect(() => {
     if (!uniformsRef.current || !containerRef.current || !rendererRef.current) return;
@@ -415,4 +454,3 @@ void main() {
 };
 
 export default LightRays;
-

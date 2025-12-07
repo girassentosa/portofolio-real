@@ -18,6 +18,8 @@ export default function Lanyard({
     textureFile = 'lanyard.png'
 }: LanyardProps) {
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+    const [inView, setInView] = useState(true);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // Build full paths from filenames
     const cardGLB = `/assets/lanyard/${cardFile}`;
@@ -26,52 +28,49 @@ export default function Lanyard({
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+
+        // Intersection Observer logic
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setInView(entry.isIntersecting);
+            },
+            { threshold: 0.1 } // Start rendering when 10% visible
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            observer.disconnect();
+        };
     }, []);
 
     return (
-        <div className="relative z-0 w-full h-full flex justify-center items-end md:items-center transform scale-100 origin-center">
-            <Canvas
-                camera={{ position: position as [number, number, number], fov: fov }}
-                dpr={[1, isMobile ? 1.5 : 2]}
-                gl={{ alpha: transparent }}
-                onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
-            >
-                <ambientLight intensity={Math.PI} />
-                <Physics gravity={gravity as [number, number, number]} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-                    <Band isMobile={isMobile} cardGLB={cardGLB} lanyardTexture={lanyardTexture} />
-                </Physics>
-                <Environment blur={0.75}>
-                    <Lightformer
-                        intensity={2}
-                        color="white"
-                        position={[0, -1, 5]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={3}
-                        color="white"
-                        position={[-1, -1, 1]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={3}
-                        color="white"
-                        position={[1, 1, 1]}
-                        rotation={[0, 0, Math.PI / 3]}
-                        scale={[100, 0.1, 1]}
-                    />
-                    <Lightformer
-                        intensity={10}
-                        color="white"
-                        position={[-10, 0, 14]}
-                        rotation={[0, Math.PI / 2, Math.PI / 3]}
-                        scale={[100, 10, 1]}
-                    />
-                </Environment>
-            </Canvas>
+        <div ref={containerRef} className="relative z-0 w-full h-full flex justify-center items-end md:items-center transform scale-100 origin-center">
+            {inView && (
+                <Canvas
+                    camera={{ position: position as [number, number, number], fov: fov }}
+                    dpr={[1, isMobile ? 1.5 : 2]}
+                    gl={{ alpha: transparent, powerPreference: "high-performance" }}
+                    onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+                    frameloop="demand" // Use demand only if needed, but for physics we often need always. Let's stick to conditional rendering of the Canvas content or just unmounting it? Unmounting Canvas is heavy. 
+                // Better approach: Let's keep Canvas but use `frameloop="always"` only when visible.
+                // Actually, conditional rendering of the whole Canvas is the most effective way to stop the loop completely.
+                >
+                    <ambientLight intensity={Math.PI} />
+                    <Physics gravity={gravity as [number, number, number]} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!inView}>
+                        <Band isMobile={isMobile} cardGLB={cardGLB} lanyardTexture={lanyardTexture} inView={inView} />
+                    </Physics>
+                    <Environment blur={0.75}>
+                        <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                        <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                        <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
+                        <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
+                    </Environment>
+                </Canvas>
+            )}
         </div>
     );
 }
@@ -91,9 +90,10 @@ interface BandProps {
     isMobile?: boolean;
     cardGLB: string;
     lanyardTexture: string;
+    inView?: boolean;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardTexture }: BandProps) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardGLB, lanyardTexture, inView = true }: BandProps) {
     const band = useRef<THREE.Mesh>(null);
     const fixed = useRef<any>(null);
     const j1 = useRef<any>(null);

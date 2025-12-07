@@ -73,9 +73,7 @@ const TextType: React.FC<TextTypeProps> = ({
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
+          setIsVisible(entry.isIntersecting);
         });
       },
       { threshold: 0.1 }

@@ -4,7 +4,12 @@ import { useState, useEffect } from 'react';
 import ProfileCard from '@/components/ProfileCard';
 import TextType from '@/components/TextType';
 import TrueFocus from '@/components/TrueFocus';
-import Lanyard from '@/components/Lanyard';
+import dynamic from 'next/dynamic';
+
+const Lanyard = dynamic(() => import('@/components/Lanyard'), {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-transparent" />
+});
 
 
 import PixelCard from '@/components/PixelCard';

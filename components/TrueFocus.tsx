@@ -31,8 +31,23 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
+  const [inView, setInView] = useState(false);
+
   useEffect(() => {
-    if (!manualMode) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!manualMode && inView) {
       const interval = setInterval(
         () => {
           setCurrentIndex(prev => (prev + 1) % words.length);
@@ -42,7 +57,7 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
 
       return () => clearInterval(interval);
     }
-  }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
+  }, [manualMode, inView, animationDuration, pauseBetweenAnimations, words.length]);
 
   useEffect(() => {
     if (currentIndex === null || currentIndex === -1) return;
