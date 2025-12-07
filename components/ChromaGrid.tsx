@@ -99,7 +99,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = React.memo(({ items = [], classNam
             ref={rootRef}
             onPointerMove={handleMove}
             onPointerLeave={handleLeave}
-            className={`relative w-full h-full flex flex-wrap justify-center items-start gap-3 ${className}`}
+            className={`relative w-full h-full flex flex-wrap justify-center items-start gap-2 md:gap-3 ${className}`}
             style={{
                 '--r': `${radius}px`,
                 '--x': '50%',
@@ -111,11 +111,12 @@ const ChromaGrid: React.FC<ChromaGridProps> = React.memo(({ items = [], classNam
                     key={i}
                     delay={0.1 + (i * 0.1)}
                     direction="up"
+                    className="w-full md:w-[380px]"
                 >
                     <article
                         onMouseMove={handleCardMove}
                         onClick={() => handleCardClick(c)}
-                        className="group relative flex flex-col w-[380px] h-[380px] rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
+                        className="group relative flex flex-col w-full h-[380px] rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
                         style={{
                             '--card-border': c.borderColor || 'transparent',
                             background: c.gradient,

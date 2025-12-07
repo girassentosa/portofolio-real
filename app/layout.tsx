@@ -61,10 +61,10 @@ export default function RootLayout({
             />
           </div>
         )}
-        
-        {/* Navbar - Only show on main portfolio page, hide on admin routes */}
-        {!isAdminRoute && <Navbar />}
-        
+
+        {/* Navbar - Moved to Home page to control visibility during loading */}
+        {!isAdminRoute && null /* Navbar rendered in page.tsx */}
+
         {/* Content - Responsive container */}
         <div className="relative z-10 w-full">
           {children}

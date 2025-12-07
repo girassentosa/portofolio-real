@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, CSSProperties } from 'react';
+import Navbar from '@/components/Navbar';
 import ProfileCard from '@/components/ProfileCard';
 import TextType from '@/components/TextType';
 import TrueFocus from '@/components/TrueFocus';
@@ -206,6 +207,9 @@ export default function Home() {
 
     return (
         <div className={`${isLoading ? 'opacity-0' : 'opacity-100 animate-fade-in'} transition-opacity duration-500 relative`}>
+            {/* Navbar - Only show when not loading */}
+            <Navbar />
+
             {/* Background Gradient for Navbar Constrast */}
             <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-cyan-900/10 via-purple-900/5 to-transparent -z-10 pointer-events-none" />
 
